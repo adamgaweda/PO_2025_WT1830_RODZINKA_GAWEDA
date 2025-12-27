@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="agh.ics.oop.SimulationTest" tests="6" skipped="0" failures="1" errors="0" timestamp="2025-11-23T12:13:13.523Z" hostname="DESKTOP-HEQR82N" time="0.047">
+  <properties/>
+  <testcase name="test3Directions()" classname="agh.ics.oop.SimulationTest" time="0.025"/>
+  <testcase name="test9ALotOfAnimals()" classname="agh.ics.oop.SimulationTest" time="0.002"/>
+  <testcase name="testRun()" classname="agh.ics.oop.SimulationTest" time="0.011">
+    <failure message="agh.ics.oop.model.util.IncorrectPositionException: Position (2, 0) is not correct" type="agh.ics.oop.model.util.IncorrectPositionException">agh.ics.oop.model.util.IncorrectPositionException: Position (2, 0) is not correct
+	at app//agh.ics.oop.model.AbstractWorldMap.place(AbstractWorldMap.java:38)
+	at app//agh.ics.oop.SimulationTest.testRun(SimulationTest.java:22)
+	at java.base@25/java.lang.reflect.Method.invoke(Method.java:565)
+	at java.base@25/java.util.ArrayList.forEach(ArrayList.java:1604)
+	at java.base@25/java.util.ArrayList.forEach(ArrayList.java:1604)
+</failure>
+  </testcase>
+  <testcase name="test4GoingInCircle()" classname="agh.ics.oop.SimulationTest" time="0.001"/>
+  <testcase name="test5GoingWayOffTheMap()" classname="agh.ics.oop.SimulationTest" time="0.001"/>
+  <testcase name="test2Moving()" classname="agh.ics.oop.SimulationTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -61,7 +61,10 @@ public abstract class AbstractWorldMap implements WorldMap {
         }
         animals.remove(animal.pos);
         animal.pos = vectorAnimal;
-        place(animal);
+        animal.changeEnergy(-1);
+        if (animal.energy>0){
+            place(animal);
+        }
     }
 
     @Override

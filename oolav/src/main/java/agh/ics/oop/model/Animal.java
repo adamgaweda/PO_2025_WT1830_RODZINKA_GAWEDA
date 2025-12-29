@@ -5,6 +5,7 @@ import agh.ics.oop.MapDirection;
 public class Animal implements WorldElement {
     MapDirection facing = MapDirection.North;
     Vector2d pos= new  Vector2d(0,0);
+    int energy = 0;
 
     public void defaultAnimal() {
         this.pos = new Vector2d(2,2);
@@ -26,6 +27,14 @@ public class Animal implements WorldElement {
     @Override
     public String toString() {
         return facing.toString();
+    }
+
+    public void setEnergy(int energy){
+        this.energy=energy;
+    }
+
+    public void changeEnergy(int energy){
+        this.energy+=energy;
     }
 
     public boolean isAT(Vector2d position) {

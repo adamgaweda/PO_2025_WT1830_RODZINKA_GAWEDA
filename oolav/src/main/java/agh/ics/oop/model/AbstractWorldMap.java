@@ -30,10 +30,8 @@ public abstract class AbstractWorldMap implements WorldMap {
     }
     @Override
     public void place(Animal animal) throws IncorrectPositionException{
-        if (canMoveTo(animal.getPosition())){
-            animals.put(animal.getPosition(), animal);
-            notifyMapChanged("Animal placed at: " + animal.getPosition());
-        } else throw new IncorrectPositionException(animal.getPosition());
+        animals.put(animal.getPosition(), animal);
+        notifyMapChanged("Animal placed at: " + animal.getPosition());
     }
 
     @Override
@@ -45,12 +43,25 @@ public abstract class AbstractWorldMap implements WorldMap {
             case LEFT-> animal.facing = animal.facing.prev();
             case RIGHT -> animal.facing = animal.facing.next();
         }
-        if (canMoveTo(vectorAnimal)) {
-            animals.remove(animal.pos);
-            animal.pos = vectorAnimal;
-            animals.put(vectorAnimal, animal);
+        Vector2d topRight = getCurrentBounds().topRightEdgeOfTheMap();
+        if (vectorAnimal.getX()>topRight.getX()){
+            vectorAnimal= new Vector2d(0,vectorAnimal.getY());
         }
+        if (vectorAnimal.getX()<0){
+            vectorAnimal= new Vector2d(topRight.getX(), vectorAnimal.getY());
 
+        }
+        if (vectorAnimal.getY()> topRight.getY()){
+            vectorAnimal = new Vector2d(vectorAnimal.getX(), topRight.getY());
+            animal.facing = animal.facing.next().next();
+        }
+        if (vectorAnimal.getY()<0){
+            vectorAnimal = new Vector2d(vectorAnimal.getX(),0);
+            animal.facing = animal.facing.next().next();
+        }
+        animals.remove(animal.pos);
+        animal.pos = vectorAnimal;
+        place(animal);
     }
 
     @Override
@@ -65,7 +76,7 @@ public abstract class AbstractWorldMap implements WorldMap {
 
     @Override
     public boolean canMoveTo(Vector2d position) {
-        return !isOccupied(position);
+        return true;
     }
 
     @Override

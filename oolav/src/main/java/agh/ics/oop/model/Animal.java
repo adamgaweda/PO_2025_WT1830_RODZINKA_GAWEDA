@@ -2,10 +2,14 @@ package agh.ics.oop.model;
 
 import agh.ics.oop.MapDirection;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Animal implements WorldElement {
     MapDirection facing = MapDirection.North;
     Vector2d pos= new  Vector2d(0,0);
     int energy = 0;
+    List<MapDirection> gen = new ArrayList<>();
 
     public void defaultAnimal() {
         this.pos = new Vector2d(2,2);
@@ -58,6 +62,22 @@ public class Animal implements WorldElement {
                 return;
             case RIGHT:
                 this.facing = this.facing.next();
+        }
+    }
+
+    public void genarateGenes(int numberOfGenes){
+        for (int i = 0; i<numberOfGenes;i++){
+            int randomNum = (int)(Math.random()*8);
+            switch (randomNum){
+                case 0 -> gen.add(MapDirection.North);
+                case 1 -> gen.add(MapDirection.NorthEast);
+                case 2 -> gen.add(MapDirection.East);
+                case 3 -> gen.add(MapDirection.SouthEast);
+                case 4 -> gen.add(MapDirection.South);
+                case 5 -> gen.add(MapDirection.SouthWest);
+                case 6 -> gen.add(MapDirection.West);
+                case 7 -> gen.add(MapDirection.NorthWest);
+            }
         }
     }
 }

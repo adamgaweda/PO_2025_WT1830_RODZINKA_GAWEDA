@@ -11,6 +11,11 @@ public abstract class AbstractWorldMap implements WorldMap {
     private final MapVisualizer mapVisualizer = new MapVisualizer(this);
     private final List<MapChangeListener> mapChangeListeners = new ArrayList<>();
     private final UUID uuid =  UUID.randomUUID();
+    int energyLoss;
+
+    public void changeEnergyLoss(int energyLost) {
+        this.energyLoss = energyLost;
+    }
 
 
     abstract public Boundary getCurrentBounds();
@@ -28,6 +33,7 @@ public abstract class AbstractWorldMap implements WorldMap {
             mapChangeListener.mapChanged(this, message);
         }
     }
+
     @Override
     public void place(Animal animal) throws IncorrectPositionException{
         animals.put(animal.getPosition(), animal);
@@ -53,16 +59,16 @@ public abstract class AbstractWorldMap implements WorldMap {
         }
         if (vectorAnimal.getY()> topRight.getY()){
             vectorAnimal = new Vector2d(vectorAnimal.getX(), topRight.getY());
-            animal.facing = animal.facing.next().next();
+            animal.facing = animal.facing.turnAround();
         }
         if (vectorAnimal.getY()<0){
             vectorAnimal = new Vector2d(vectorAnimal.getX(),0);
-            animal.facing = animal.facing.next().next();
+            animal.facing = animal.facing.turnAround();
         }
         animals.remove(animal.pos);
         animal.pos = vectorAnimal;
-        animal.changeEnergy(-1);
-        if (animal.energy>0){
+        animal.changeEnergy(-energyLoss);
+        if (animal.energy>-1){
             place(animal);
         }
     }

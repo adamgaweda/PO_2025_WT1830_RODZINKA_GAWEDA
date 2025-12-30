@@ -55,5 +55,44 @@ public enum MapDirection {
             case NorthWest -> new Vector2d(-1,1);
         };
     }
+
+    public MapDirection turnAround(){
+        return switch (this){
+            case North -> South;
+            case NorthEast -> SouthWest;
+            case East -> West;
+            case SouthEast -> NorthWest;
+            case South -> North;
+            case SouthWest -> NorthEast;
+            case West -> East;
+            case NorthWest -> SouthEast;
+        };
+    }
+
+    public MapDirection next90(){
+        return switch (this){
+            case North -> East;
+            case NorthEast -> SouthEast;
+            case East -> South;
+            case SouthEast -> SouthWest;
+            case South -> West;
+            case SouthWest -> NorthWest;
+            case West -> North;
+            case NorthWest -> NorthEast;
+        };
+    }
+
+    public MapDirection prev90(){
+        return switch (this){
+            case North -> West;
+            case NorthWest -> SouthWest;
+            case West -> South;
+            case SouthWest -> SouthEast;
+            case South -> East;
+            case SouthEast -> NorthEast;
+            case East -> North;
+            case NorthEast -> NorthWest;
+        };
+    }
 }
 

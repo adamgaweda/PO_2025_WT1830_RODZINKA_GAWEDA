@@ -10,6 +10,7 @@ public class Animal implements WorldElement {
     Vector2d pos= new  Vector2d(0,0);
     int energy = 0;
     List<MapDirection> gen = new ArrayList<>();
+    int maxEnergy = 0;
 
     public void defaultAnimal() {
         this.pos = new Vector2d(2,2);
@@ -35,10 +36,20 @@ public class Animal implements WorldElement {
 
     public void setEnergy(int energy){
         this.energy=energy;
+        if (this.energy> maxEnergy){
+            maxEnergy =this.energy;
+        }
     }
 
     public void changeEnergy(int energy){
         this.energy+=energy;
+        if (this.energy> maxEnergy){
+            maxEnergy =this.energy;
+        }
+    }
+
+    public int getMaxEnergy(){
+        return maxEnergy;
     }
 
     public boolean isAT(Vector2d position) {

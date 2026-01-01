@@ -11,12 +11,15 @@ public abstract class AbstractWorldMap implements WorldMap {
     private final MapVisualizer mapVisualizer = new MapVisualizer(this);
     private final List<MapChangeListener> mapChangeListeners = new ArrayList<>();
     private final UUID uuid =  UUID.randomUUID();
-    int energyLoss;
+    public int energyLoss;
 
     public void changeEnergyLoss(int energyLost) {
         this.energyLoss = energyLost;
     }
 
+    public int getEnergyLoss(){
+        return energyLoss;
+    }
 
     abstract public Boundary getCurrentBounds();
 

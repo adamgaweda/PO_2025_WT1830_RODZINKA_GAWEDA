@@ -18,6 +18,8 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 
@@ -83,6 +85,10 @@ public class SimulationPresenter implements MapChangeListener {
         List<MoveDirection> directions = OptionsParser.parse(moveList.split("\\s+"));
         List<Vector2d> positions = List.of(new Vector2d(2,2),new Vector2d(3,4));
         AbstractWorldMap map = new GrassField(10);
+        map.addObserver((worldMap, message) -> {
+            String timeOfDay = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy hh-mm-ss"));
+            System.out.printf("%s %s%n", timeOfDay, message);
+        });
         try {
             SimulationApp simulationApp = new SimulationApp();
             simulationApp.launchSimulationWindow(map);

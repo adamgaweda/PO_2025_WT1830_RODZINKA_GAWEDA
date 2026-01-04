@@ -82,8 +82,11 @@ public abstract class AbstractWorldMap implements WorldMap {
     }
 
     @Override
-    public WorldElement objectAt(Vector2d position) {
-        return animals.get(position);
+    public Optional<WorldElement> objectAt(Vector2d position) {
+       if (animals.get(position) == null) {
+           return Optional.empty();
+       }
+       return Optional.of(animals.get(position));
     }
 
     @Override
@@ -105,5 +108,19 @@ public abstract class AbstractWorldMap implements WorldMap {
     @Override
     public UUID getId() {
         return this.uuid;
+    }
+
+    @Override
+    public List<Animal> getOrderedAnimals(){
+//        Comparator<Animal> animalComparator = Comparator
+//                .comparing(Animal::getPosition,
+//                        Vector2d::comparteTo);
+//        Arrays.sort(new List[]{List.of(animals)});
+//        return List.of(); doesnt work
+        return animals.values().stream()
+                .sorted(Comparator.comparing((Animal animal) -> animal.getPosition().getX())
+                        .thenComparing(animal -> animal.getPosition().getY())).toList()
+                ;
+        // this works
     }
 }

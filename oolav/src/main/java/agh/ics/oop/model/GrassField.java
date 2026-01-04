@@ -5,6 +5,9 @@ import agh.ics.oop.model.util.MapVisualizer;
 
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static java.lang.Math.*;
 
@@ -14,6 +17,7 @@ public class GrassField extends AbstractWorldMap {
 
 
     public GrassField(int liczba) {
+
         final int intTraw = (int) sqrt(liczba*10) + 1;
         final UUID uuid = UUID.randomUUID();
         vectorGrass = new  Vector2d(intTraw, intTraw);
@@ -29,11 +33,11 @@ public class GrassField extends AbstractWorldMap {
     }
 
     @Override
-    public WorldElement objectAt(Vector2d position) {
-        if (super.objectAt(position) != null) {
+    public Optional<WorldElement> objectAt(Vector2d position) {
+        if (super.objectAt(position).isPresent()) {
             return super.objectAt(position);
         }
-        return grass.get(position);
+        return Optional.of(grass.get(position));
     }
 
     @Override
@@ -56,9 +60,11 @@ public class GrassField extends AbstractWorldMap {
 
     @Override
     public List<WorldElement> getElements() {
-        List<WorldElement> elements = super.getElements();
-        elements.addAll(new ArrayList<>(grass.values()));
-        return elements;
+//        List<WorldElement> elements = super.getElements();
+//        elements.addAll(new ArrayList<>(grass.values()));
+//        return elements;
+        return Stream.concat(super.getElements().stream(), grass.values().stream())
+                .collect(Collectors.toList());
     }
 
 

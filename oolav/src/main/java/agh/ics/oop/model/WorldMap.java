@@ -51,4 +51,6 @@ public interface WorldMap extends MoveValidator {
     public Boundary getCurrentBounds();
 
     UUID getId();
+
+    List<Animal> getOrderedAnimals();
 }

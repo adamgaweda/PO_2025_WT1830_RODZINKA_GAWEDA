@@ -5,7 +5,6 @@ import agh.ics.oop.model.WorldMap;
 
 import java.io.File;
 import java.io.FileWriter;
-import java.util.Scanner;
 
 public class FileMapDisplay implements MapChangeListener {
 

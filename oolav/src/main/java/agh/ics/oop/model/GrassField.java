@@ -1,35 +1,21 @@
 package agh.ics.oop.model;
 
-import agh.ics.oop.model.util.IncorrectPositionException;
-import agh.ics.oop.model.util.MapVisualizer;
-
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static java.lang.Math.*;
 
 public class GrassField extends AbstractWorldMap {
-    final Vector2d vectorGrass;
+    final Vector2d topLeftCorner;
     Map<Vector2d, Grass> grass = new HashMap<>();
 
-
     public GrassField(int liczba) {
-
-        final int intTraw = (int) sqrt(liczba*10) + 1;
+        final int numberOfGrass = (int) sqrt(liczba*10) + 1;
+        topLeftCorner = new Vector2d(numberOfGrass,numberOfGrass);
         final UUID uuid = UUID.randomUUID();
-        vectorGrass = new  Vector2d(intTraw, intTraw);
-        for (int i = 0; i < liczba; i++) {
-            int randomNum = ThreadLocalRandom.current().nextInt(0, intTraw*intTraw + 1);
-            Vector2d grassPosition = new Vector2d(randomNum/intTraw, randomNum%intTraw);
-            while (isOccupied(grassPosition)) {
-                randomNum = ThreadLocalRandom.current().nextInt(0, intTraw^2 + 1);
-                grassPosition = new Vector2d(randomNum/intTraw, randomNum%intTraw);
-            }
-            grass.put(grassPosition, new Grass(grassPosition));
-        }
+        generateGrass(numberOfGrass);
     }
 
     @Override
@@ -67,6 +53,18 @@ public class GrassField extends AbstractWorldMap {
                 .collect(Collectors.toList());
     }
 
+
+    public void generateGrass(int numberOfGrassToGenerate){
+        for (int i = 0; i < numberOfGrassToGenerate; i++) {
+            int randomNum = ThreadLocalRandom.current().nextInt(0, topLeftCorner.getX()* topLeftCorner.getY() + 1);
+            Vector2d grassPosition = new Vector2d(randomNum/ topLeftCorner.getX(), randomNum% topLeftCorner.getY());
+            while (isOccupied(grassPosition)) {
+                randomNum = ThreadLocalRandom.current().nextInt(0, topLeftCorner.getX()* topLeftCorner.getY() + 1);
+                grassPosition = new Vector2d(randomNum/ topLeftCorner.getX(), randomNum% topLeftCorner.getY());
+            }
+            grass.put(grassPosition, new Grass(grassPosition));
+        }
+    }
 
 
 

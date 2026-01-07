@@ -56,6 +56,11 @@ public class Animal implements WorldElement {
         return pos.equals(position);
     }
 
+    @Override
+    public String getImage(){
+        return "animal.jpg"; //trzeba uzależnić od kierunku
+    }
+
     public void move(MoveDirection direction,MoveValidator move) {
         switch (direction) {
             case FORWARD:

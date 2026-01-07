@@ -22,4 +22,9 @@ public class Grass implements WorldElement {
     public boolean isAT(Vector2d position) {
         return position.equals(this.position);
     }
+
+    @Override
+    public String getImage(){
+        return "grass.png";
+    }
 }

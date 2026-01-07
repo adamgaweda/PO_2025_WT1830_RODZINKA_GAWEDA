@@ -21,6 +21,7 @@ public class SimulationEngine {
     }
 
     void runAsync(){
+        threads.clear();
         for (Simulation simulation : simulations) {
             Thread thread = new Thread(simulation);
             threads.add(thread);
@@ -40,7 +41,6 @@ public class SimulationEngine {
     public void runAsyncInThreadPool() {
         for (Simulation simulation : simulations)
             threadPool.submit(simulation);
-        threadPool.shutdown();
     }
 
 }

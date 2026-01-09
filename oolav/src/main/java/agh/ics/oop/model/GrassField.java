@@ -11,11 +11,9 @@ public class GrassField extends AbstractWorldMap {
     final Vector2d topLeftCorner;
     Map<Vector2d, Grass> grass = new HashMap<>();
 
-    public GrassField(int liczba) {
-        final int numberOfGrass = (int) sqrt(liczba*10) + 1;
-        topLeftCorner = new Vector2d(numberOfGrass,numberOfGrass);
+    public GrassField(int width,int height) {
+        topLeftCorner = new Vector2d(width,height);
         final UUID uuid = UUID.randomUUID();
-        generateGrass(numberOfGrass);
     }
 
     @Override

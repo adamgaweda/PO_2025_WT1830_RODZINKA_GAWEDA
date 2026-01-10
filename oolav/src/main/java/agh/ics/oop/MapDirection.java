@@ -2,8 +2,17 @@ package agh.ics.oop;
 
 import agh.ics.oop.model.Vector2d;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Random;
+
 public enum MapDirection {
     North,East,South,West,NorthEast,NorthWest,SouthEast,SouthWest;
+
+    private static final List<MapDirection> VALUES = List.of(values());
+    private static final int SIZE = VALUES.size();
+    private static final Random RANDOM = new Random();
     @Override
     public String toString() {
         return switch (this) {
@@ -93,6 +102,10 @@ public enum MapDirection {
             case East -> North;
             case NorthEast -> NorthWest;
         };
+    }
+
+    public static MapDirection getRandom(){
+        return VALUES.get(RANDOM.nextInt(SIZE));
     }
 }
 

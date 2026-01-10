@@ -1,6 +1,7 @@
 package agh.ics.oop.model;
 
 import java.util.Objects;
+import java.util.Random;
 
 import static java.lang.Math.max;
 import static java.lang.Math.min;
@@ -67,5 +68,10 @@ public class Vector2d { //na wykladzie pokazano, ze mozna uzyc recordu zamiast k
         }
         if (this.x<s2.x) return 1;
         return 0;
+    }
+
+    public Vector2d randomVectorWithinGivenVector(){
+        Random random = new Random();
+        return new Vector2d(random.nextInt(this.x),random.nextInt(this.y));
     }
 }

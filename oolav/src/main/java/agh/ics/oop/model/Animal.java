@@ -4,6 +4,7 @@ import agh.ics.oop.MapDirection;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class Animal implements WorldElement {
     MapDirection facing = MapDirection.North;
@@ -11,6 +12,7 @@ public class Animal implements WorldElement {
     int energy = 0;
     List<MapDirection> gen = new ArrayList<>();
     int maxEnergy = 0;
+    final UUID uuid;
 
     public void defaultAnimal() {
         this.pos = new Vector2d(2,2);
@@ -18,7 +20,10 @@ public class Animal implements WorldElement {
 
     public Animal(Vector2d pos) {
         this.pos = pos;
+         uuid =  UUID.randomUUID();
     }
+
+    public UUID getUuid(){return uuid;}
 
     public Vector2d getPosition() {
         return pos;
@@ -37,18 +42,18 @@ public class Animal implements WorldElement {
     public void setEnergy(int energy){
         this.energy=energy;
         if (this.energy> maxEnergy){
-            maxEnergy =this.energy;
+            maxEnergy = this.energy;
         }
     }
 
     public void changeEnergy(int energy){
         this.energy+=energy;
         if (this.energy> maxEnergy){
-            maxEnergy =this.energy;
+            maxEnergy = this.energy;
         }
     }
 
-    public int getMaxEnergy(){
+    public double getMaxEnergy(){
         return maxEnergy;
     }
 
@@ -76,19 +81,9 @@ public class Animal implements WorldElement {
         }
     }
 
-    public void genarateGenes(int numberOfGenes){
+    public void generateGenes(int numberOfGenes){
         for (int i = 0; i<numberOfGenes;i++){
-            int randomNum = (int)(Math.random()*8);
-            switch (randomNum){
-                case 0 -> gen.add(MapDirection.North);
-                case 1 -> gen.add(MapDirection.NorthEast);
-                case 2 -> gen.add(MapDirection.East);
-                case 3 -> gen.add(MapDirection.SouthEast);
-                case 4 -> gen.add(MapDirection.South);
-                case 5 -> gen.add(MapDirection.SouthWest);
-                case 6 -> gen.add(MapDirection.West);
-                case 7 -> gen.add(MapDirection.NorthWest);
-            }
+            gen.add(MapDirection.getRandom());
         }
     }
 }

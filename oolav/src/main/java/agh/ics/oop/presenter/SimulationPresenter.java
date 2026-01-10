@@ -1,7 +1,6 @@
 package agh.ics.oop.presenter;
 
 import agh.ics.oop.OptionsParser;
-import agh.ics.oop.Simulation;
 import agh.ics.oop.SimulationApp;
 import agh.ics.oop.model.*;
 import javafx.application.Platform;
@@ -16,7 +15,7 @@ import javafx.scene.layout.RowConstraints;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
+import java.util.*;
 
 
 public class SimulationPresenter implements MapChangeListener {
@@ -35,7 +34,7 @@ public class SimulationPresenter implements MapChangeListener {
     private TextField numberOfGrass,numberOfGrassAtTheStart,
             energyPerGrassEaten,numberOfGrassEachDay,startingNumberOfAnimals,
             startEnergyOfAnimals,lostEnergyAtTheEndOfTheDay,maxEnergy,energyRequiredToMate,
-            energyLostDuringMating,mutationsInChildren,gnomes,startEnergy;
+            energyLostDuringMating,mutationsInChildren,gnomes;
 
     private final int defaultMapValue = 8;
     private final int defaultEnergyValue = 1;
@@ -93,7 +92,7 @@ public class SimulationPresenter implements MapChangeListener {
         List<MoveDirection> directions = OptionsParser.parse(moveList.split("\\s+"));
         int width = getValueFromTextField(mapWidth) > 0 ? defaultMapValue : getValueFromTextField(mapWidth);
         int height = getValueFromTextField(mapHeight) > 0 ? defaultMapValue : getValueFromTextField(mapHeight);
-        int numberOfGrassValue = getValueFromTextField(numberOfGrass) > 0 ? defaultMapValue : getValueFromTextField(numberOfGrass);
+        int numberOfEnergyGrassGivesValue = getValueFromTextField(numberOfGrass) > 0 ? defaultMapValue : getValueFromTextField(numberOfGrass);
         int numberOfGrassAtTheStartValue = getValueFromTextField(numberOfGrassAtTheStart) > 0 ? defaultMapValue : getValueFromTextField(numberOfGrassAtTheStart);
         int energyPerGrassEatenValue = getValueFromTextField(energyPerGrassEaten) > 0 ? defaultMapValue : getValueFromTextField(energyPerGrassEaten);
         int numberOfGrassEachDayValue = getValueFromTextField(numberOfGrassEachDay) > 0 ? defaultMapValue : getValueFromTextField(numberOfGrassEachDay);
@@ -105,9 +104,9 @@ public class SimulationPresenter implements MapChangeListener {
         int energyLostDuringMatingValue = getValueFromTextField(energyLostDuringMating) > 0 ? defaultMapValue : getValueFromTextField(energyLostDuringMating);
         int mutationsInChildrenValue = getValueFromTextField(mutationsInChildren) > 0 ? defaultMapValue : getValueFromTextField(mutationsInChildren);
         int gnomesValue = getValueFromTextField(gnomes) > 0 ? defaultMapValue : getValueFromTextField(gnomes);
-        int startEnergyValue = getValueFromTextField(startEnergy) > 0 ? defaultMapValue*defaultMapValue : getValueFromTextField(startEnergy);
-        List<Vector2d> positions = List.of(new Vector2d(2,2),new Vector2d(3,4));
-        AbstractWorldMap map = new GrassField(width,height);
+        List<Animal> animals = createAnimals(width,height,startingNumberOfAnimalsValue,gnomesValue,startEnergyOfAnimalsValue,maxEnergyValue);
+        GrassField map = new GrassField(width,height);
+        map.generateGrass(numberOfGrassAtTheStartValue);
         map.addObserver((worldMap, message) -> {
             String timeOfDay = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy hh-mm-ss"));
             System.out.printf("%s %s%n", timeOfDay, message);
@@ -115,9 +114,9 @@ public class SimulationPresenter implements MapChangeListener {
         try {
             SimulationApp simulationApp = new SimulationApp();
             simulationApp.launchSimulationWindow(map);
-            Simulation simulation = new Simulation(positions, directions, map);
-            Thread thread = new Thread(simulation);
-            thread.start();
+//            Simulation simulation = new Simulation(positions, directions, map);
+//            Thread thread = new Thread(simulation);
+//            thread.start();
         } catch (IOException e){
             e.printStackTrace();
         }
@@ -144,6 +143,20 @@ public class SimulationPresenter implements MapChangeListener {
             throw new RuntimeException("put in Int");
         }
             return -1;
+    }
+
+    private List<Animal> createAnimals(int mapWidth, int mapHeight, int howManyAnimals,
+                                           int howManyGenes, int startingEnergy, int maxEnergy){
+        Vector2d mapSize = new Vector2d(mapWidth,mapHeight);
+        List<Animal> animals = new ArrayList<>();
+        for(int i=0; i<howManyAnimals;i++){
+            Animal animal = new Animal(mapSize.randomVectorWithinGivenVector());
+            animal.generateGenes(howManyGenes);
+            animal.setEnergy(maxEnergy);
+            animal.setEnergy(startingEnergy);
+            animals.add(animal);
+        }
+        return animals;
     }
 
 }

@@ -13,9 +13,9 @@ public class Simulation implements  Runnable {
     List<Animal> animal = new ArrayList<Animal>();
     List<MoveDirection> moveDirections;
     WorldMap worldMap;
-    public Simulation(List<Vector2d> vector, List<MoveDirection> directions, WorldMap map) {
-        for (Vector2d vector_zwierza : vector) {
-            Animal temp_animal = new Animal(vector_zwierza);
+    public Simulation(List<Animal> vector, List<MoveDirection> directions, WorldMap map) {
+        for (Animal animal2 : vector) {
+            Animal temp_animal = new Animal(animal2.getPosition());
                 try {
                     map.place(temp_animal);
                     animal.add(temp_animal);

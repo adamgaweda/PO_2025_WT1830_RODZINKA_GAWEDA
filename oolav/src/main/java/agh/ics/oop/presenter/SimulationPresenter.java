@@ -1,6 +1,7 @@
 package agh.ics.oop.presenter;
 
 import agh.ics.oop.OptionsParser;
+import agh.ics.oop.Simulation;
 import agh.ics.oop.SimulationApp;
 import agh.ics.oop.model.*;
 import javafx.application.Platform;
@@ -31,10 +32,27 @@ public class SimulationPresenter implements MapChangeListener {
     @FXML
     private TextField mapHeight;
     @FXML
-    private TextField numberOfGrass,numberOfGrassAtTheStart,
-            energyPerGrassEaten,numberOfGrassEachDay,startingNumberOfAnimals,
-            startEnergyOfAnimals,lostEnergyAtTheEndOfTheDay,maxEnergy,energyRequiredToMate,
-            energyLostDuringMating,mutationsInChildren,gnomes;
+    private TextField numberOfGrassAtTheStart;
+    @FXML
+    private TextField energyPerGrassEaten;
+    @FXML
+    private TextField numberOfGrassEachDay;
+    @FXML
+    private TextField startingNumberOfAnimals;
+    @FXML
+    private TextField startEnergyOfAnimals;
+    @FXML
+    private TextField lostEnergyAtTheEndOfTheDay;
+    @FXML
+    private TextField maxEnergy;
+    @FXML
+    private TextField energyRequiredToMate;
+    @FXML
+    private TextField energyLostDuringMating;
+    @FXML
+    private TextField mutationsInChildren;
+    @FXML
+    private TextField gnomes;
 
     private final int defaultMapValue = 8;
     private final int defaultEnergyValue = 1;
@@ -90,20 +108,19 @@ public class SimulationPresenter implements MapChangeListener {
     public void onSimulationStartClicked(){
         String moveList = moveListText.getText();
         List<MoveDirection> directions = OptionsParser.parse(moveList.split("\\s+"));
-        int width = getValueFromTextField(mapWidth) > 0 ? defaultMapValue : getValueFromTextField(mapWidth);
-        int height = getValueFromTextField(mapHeight) > 0 ? defaultMapValue : getValueFromTextField(mapHeight);
-        int numberOfEnergyGrassGivesValue = getValueFromTextField(numberOfGrass) > 0 ? defaultMapValue : getValueFromTextField(numberOfGrass);
-        int numberOfGrassAtTheStartValue = getValueFromTextField(numberOfGrassAtTheStart) > 0 ? defaultMapValue : getValueFromTextField(numberOfGrassAtTheStart);
-        int energyPerGrassEatenValue = getValueFromTextField(energyPerGrassEaten) > 0 ? defaultMapValue : getValueFromTextField(energyPerGrassEaten);
-        int numberOfGrassEachDayValue = getValueFromTextField(numberOfGrassEachDay) > 0 ? defaultMapValue : getValueFromTextField(numberOfGrassEachDay);
-        int startingNumberOfAnimalsValue = getValueFromTextField(startingNumberOfAnimals) > 0 ? defaultMapValue : getValueFromTextField(startingNumberOfAnimals);
-        int startEnergyOfAnimalsValue = getValueFromTextField(startEnergyOfAnimals) > 0 ? defaultMapValue*defaultMapValue : getValueFromTextField(startEnergyOfAnimals);
-        int lostEnergyAtTheEndOfTheDayValue = getValueFromTextField(lostEnergyAtTheEndOfTheDay) > 0 ? defaultEnergyValue : getValueFromTextField(lostEnergyAtTheEndOfTheDay);
-        int maxEnergyValue = getValueFromTextField(maxEnergy) > 0 ? defaultMapValue*defaultMapValue : getValueFromTextField(maxEnergy);
-        int energyRequiredToMateValue = getValueFromTextField(energyRequiredToMate) > 0 ? defaultMapValue : getValueFromTextField(energyRequiredToMate);
-        int energyLostDuringMatingValue = getValueFromTextField(energyLostDuringMating) > 0 ? defaultMapValue : getValueFromTextField(energyLostDuringMating);
-        int mutationsInChildrenValue = getValueFromTextField(mutationsInChildren) > 0 ? defaultMapValue : getValueFromTextField(mutationsInChildren);
-        int gnomesValue = getValueFromTextField(gnomes) > 0 ? defaultMapValue : getValueFromTextField(gnomes);
+        int width = getValueFromTextField(mapWidth) < 0 ? defaultMapValue : getValueFromTextField(mapWidth);
+        int height = getValueFromTextField(mapHeight) < 0 ? defaultMapValue : getValueFromTextField(mapHeight);
+        int numberOfGrassAtTheStartValue = getValueFromTextField(numberOfGrassAtTheStart) < 0 ? defaultMapValue : getValueFromTextField(numberOfGrassAtTheStart);
+        int energyPerGrassEatenValue = getValueFromTextField(energyPerGrassEaten) < 0 ? defaultMapValue : getValueFromTextField(energyPerGrassEaten);
+        int numberOfGrassEachDayValue = getValueFromTextField(numberOfGrassEachDay) < 0 ? defaultMapValue : getValueFromTextField(numberOfGrassEachDay);
+        int startingNumberOfAnimalsValue = getValueFromTextField(startingNumberOfAnimals) < 0 ? defaultMapValue : getValueFromTextField(startingNumberOfAnimals);
+        int startEnergyOfAnimalsValue = getValueFromTextField(startEnergyOfAnimals) < 0 ? defaultMapValue*defaultMapValue : getValueFromTextField(startEnergyOfAnimals);
+        int lostEnergyAtTheEndOfTheDayValue = getValueFromTextField(lostEnergyAtTheEndOfTheDay) < 0 ? defaultEnergyValue : getValueFromTextField(lostEnergyAtTheEndOfTheDay);
+        int maxEnergyValue = getValueFromTextField(maxEnergy) < 0 ? defaultMapValue*defaultMapValue : getValueFromTextField(maxEnergy);
+        int energyRequiredToMateValue = getValueFromTextField(energyRequiredToMate) < 0 ? defaultMapValue : getValueFromTextField(energyRequiredToMate);
+        int energyLostDuringMatingValue = getValueFromTextField(energyLostDuringMating) < 0 ? defaultMapValue : getValueFromTextField(energyLostDuringMating);
+        int mutationsInChildrenValue = getValueFromTextField(mutationsInChildren) < 0 ? defaultMapValue : getValueFromTextField(mutationsInChildren);
+        int gnomesValue = getValueFromTextField(gnomes) < 0 ? defaultMapValue : getValueFromTextField(gnomes);
         List<Animal> animals = createAnimals(width,height,startingNumberOfAnimalsValue,gnomesValue,startEnergyOfAnimalsValue,maxEnergyValue);
         GrassField map = new GrassField(width,height);
         map.generateGrass(numberOfGrassAtTheStartValue);
@@ -114,9 +131,9 @@ public class SimulationPresenter implements MapChangeListener {
         try {
             SimulationApp simulationApp = new SimulationApp();
             simulationApp.launchSimulationWindow(map);
-//            Simulation simulation = new Simulation(positions, directions, map);
-//            Thread thread = new Thread(simulation);
-//            thread.start();
+            Simulation simulation = new Simulation(animals, directions, map);
+            Thread thread = new Thread(simulation);
+            thread.start();
         } catch (IOException e){
             e.printStackTrace();
         }
@@ -136,13 +153,14 @@ public class SimulationPresenter implements MapChangeListener {
         });
     }
 
-    private int getValueFromTextField(TextField test){
+    private int getValueFromTextField(TextField test) throws RuntimeException{
+        System.out.println("aaa");
         try {
-            if (test.getText() != null) return Integer.parseInt(test.getText());
-        } catch (NumberFormatException e) {
+            if (test.getText() == null || test.getText().trim().isEmpty()) return -1;
+            return Integer.parseInt(test.getText());
+        } catch (Exception e) {
             throw new RuntimeException("put in Int");
         }
-            return -1;
     }
 
     private List<Animal> createAnimals(int mapWidth, int mapHeight, int howManyAnimals,

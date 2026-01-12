@@ -57,7 +57,7 @@ public class World {
         for (int i =0; i<1000;i++){
             AbstractWorldMap map = i % 2 == 0 ? new RectangularMap(4,4) : new GrassField(4,4);
             map.addObserver(new ConsoleMapDisplay());
-            simulations.add(new Simulation(positions,directions,map));
+            //simulations.add(new Simulation(positions,directions,map));
         }
 
         SimulationEngine engine = new SimulationEngine(simulations);

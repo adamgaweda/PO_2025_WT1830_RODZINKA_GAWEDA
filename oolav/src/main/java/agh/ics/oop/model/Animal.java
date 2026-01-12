@@ -31,7 +31,7 @@ public class Animal implements WorldElement {
 
     @Override
     public String toString() {
-        return facing.toString();
+        return "Z: "+facing.toString();
     }
 
     public void setEnergy(int energy){
@@ -58,7 +58,16 @@ public class Animal implements WorldElement {
 
     @Override
     public String getImage(){
-        return "animal.jpg"; //trzeba uzależnić od kierunku
+        return switch(facing) {
+            case North -> "up.png";
+            case South -> "down.png";
+            case NorthEast -> "animal.jpg";
+            case NorthWest -> "animal.jpg";
+            case East -> "left.png";
+            case West -> "right.png";
+            case SouthEast -> "animal.jpg";
+            case SouthWest -> "animal.jpg";
+        };
     }
 
     public void move(MoveDirection direction,MoveValidator move) {

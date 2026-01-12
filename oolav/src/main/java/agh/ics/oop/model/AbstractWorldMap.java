@@ -1,6 +1,7 @@
 package agh.ics.oop.model;
 
 
+import agh.ics.oop.MapDirection;
 import agh.ics.oop.model.util.IncorrectPositionException;
 import agh.ics.oop.model.util.MapVisualizer;
 
@@ -44,14 +45,9 @@ public abstract class AbstractWorldMap implements WorldMap {
     }
 
     @Override
-    public void move(Animal animal, MoveDirection direction) {
+    public void move(Animal animal, MapDirection mapDirection) {
         Vector2d vectorAnimal = animal.pos;
-        switch (direction) {
-            case FORWARD -> vectorAnimal = vectorAnimal.add(animal.facing.toUnitVector());
-            case BACKWARD -> vectorAnimal = vectorAnimal.sub(animal.facing.toUnitVector());
-            case LEFT-> animal.facing = animal.facing.prev();
-            case RIGHT -> animal.facing = animal.facing.next();
-        }
+        vectorAnimal.add(mapDirection.toUnitVector());
         Vector2d topRight = getCurrentBounds().topRightEdgeOfTheMap();
         if (vectorAnimal.getX()>topRight.getX()){
             vectorAnimal= new Vector2d(0,vectorAnimal.getY());

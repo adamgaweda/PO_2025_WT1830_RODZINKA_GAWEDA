@@ -13,6 +13,7 @@ public class Animal implements WorldElement {
     List<MapDirection> gen = new ArrayList<>();
     int maxEnergy = 0;
     final UUID uuid;
+    int whatGenCurentlyOn = 0;
 
     public void defaultAnimal() {
         this.pos = new Vector2d(2,2);
@@ -53,7 +54,7 @@ public class Animal implements WorldElement {
         }
     }
 
-    public double getMaxEnergy(){
+    public int getMaxEnergy(){
         return maxEnergy;
     }
 
@@ -61,25 +62,12 @@ public class Animal implements WorldElement {
         return pos.equals(position);
     }
 
-    public void move(MoveDirection direction,MoveValidator move) {
-        switch (direction) {
-            case FORWARD:
-                if (move.canMoveTo(pos.add(facing.toUnitVector()))){
-                    this.pos = pos.add(facing.toUnitVector());
-                }
-                return;
-            case BACKWARD:
-                if (move.canMoveTo(pos.sub(facing.toUnitVector()))) {
-                    this.pos = pos.sub(facing.toUnitVector());
-                }
-                return;
-            case LEFT:
-                this.facing = this.facing.prev();
-                return;
-            case RIGHT:
-                this.facing = this.facing.next();
-        }
+    public MapDirection getWhatGenCurentlyOn(){
+        MapDirection currentGen=gen.get(whatGenCurentlyOn);
+        whatGenCurentlyOn = (whatGenCurentlyOn+1)%gen.size();
+        return currentGen;
     }
+
 
     public void generateGenes(int numberOfGenes){
         for (int i = 0; i<numberOfGenes;i++){

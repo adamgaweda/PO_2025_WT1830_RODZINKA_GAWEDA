@@ -106,8 +106,6 @@ public class SimulationPresenter implements MapChangeListener {
 
     @FXML
     public void onSimulationStartClicked(){
-        String moveList = moveListText.getText();
-        List<MoveDirection> directions = OptionsParser.parse(moveList.split("\\s+"));
         int width = getValueFromTextField(mapWidth) < 0 ? defaultMapValue : getValueFromTextField(mapWidth);
         int height = getValueFromTextField(mapHeight) < 0 ? defaultMapValue : getValueFromTextField(mapHeight);
         int numberOfGrassAtTheStartValue = getValueFromTextField(numberOfGrassAtTheStart) < 0 ? defaultMapValue : getValueFromTextField(numberOfGrassAtTheStart);
@@ -131,7 +129,7 @@ public class SimulationPresenter implements MapChangeListener {
         try {
             SimulationApp simulationApp = new SimulationApp();
             simulationApp.launchSimulationWindow(map);
-            Simulation simulation = new Simulation(animals, directions, map);
+            Simulation simulation = new Simulation(animals, map);
             Thread thread = new Thread(simulation);
             thread.start();
         } catch (IOException e){
@@ -154,7 +152,6 @@ public class SimulationPresenter implements MapChangeListener {
     }
 
     private int getValueFromTextField(TextField test) throws RuntimeException{
-        System.out.println("aaa");
         try {
             if (test.getText() == null || test.getText().trim().isEmpty()) return -1;
             return Integer.parseInt(test.getText());

@@ -13,6 +13,8 @@ import java.util.concurrent.TimeUnit;
 
 public class Simulation implements  Runnable {
     List<Animal> animals = new ArrayList<Animal>();
+    List<Animal> deadAnimals = new ArrayList<>();
+    List<Animal> allAnimals = new ArrayList<>();
     GrassField worldMap;
     private final int numberOfGrassEachDayValue;
     int i =0;
@@ -34,9 +36,10 @@ public class Simulation implements  Runnable {
         map.generateGrass(numberOfGrassAtTheStartValue);
         Vector2d mapSize = new Vector2d(map.getCurrentBounds().topRightEdgeOfTheMap().getX(),map.getCurrentBounds().topRightEdgeOfTheMap().getY());
         for(int i=0; i<startingNumberOfAnimalsValue;i++){
-            Animal generatedAnimal = new Animal(mapSize,gnomesValue,maxEnergyValue,startEnergyOfAnimalsValue);
+            Animal generatedAnimal = new Animal(mapSize,gnomesValue,maxEnergyValue,startEnergyOfAnimalsValue,day);
             animals.add(generatedAnimal);
             this.worldMap.place(generatedAnimal);
+            allAnimals.add(generatedAnimal);
         }
     }
     public void run(){
@@ -71,6 +74,7 @@ public class Simulation implements  Runnable {
             if (animal.getEnergy()==0){
                 worldMap.remove(animal);
                 animal.setDeathDay(day);
+                deadAnimals.add(animal);
             }
         }
         animals.removeIf(animal -> !animal.isAlive());
@@ -105,6 +109,17 @@ public class Simulation implements  Runnable {
 
     }
 
+    public double getAverageAnimalLiveSpan(){
+        return deadAnimals.stream().mapToDouble(Animal::getLiveSpan).average().orElse(0);
+    }
+
+    public double getAverageAnimalChildrenNumber(){
+        return allAnimals.stream().mapToDouble(Animal::getNumberOfChildren).average().orElse(0);
+    }
+
+    public double getAverageEnergy(){
+        return animals.stream().mapToDouble(Animal::getEnergy).average().orElse(0);
+    }
 
     List<Animal> getAnimals() {
         return new ArrayList<Animal>(animals);

@@ -14,6 +14,8 @@ public class Animal implements WorldElement {
     int whatGenCurrentlyOn = 0;
     Integer deathDay = null;
     int numberOfGrassEaten = 0;
+    int numberOfChildren = 0;
+    int dayOfBirth;
 
     public void defaultAnimal() {
         this.pos = new Vector2d(2,2);
@@ -23,12 +25,13 @@ public class Animal implements WorldElement {
         this.pos = pos;
     }
 
-    public Animal(Vector2d birthVector, int gnomesValue,int maxEnergyValue,int startEnergyOfAnimalsValue){
+    public Animal(Vector2d birthVector, int gnomesValue,int maxEnergyValue,int startEnergyOfAnimalsValue, int dayOfBirth){
         this.pos = birthVector;
         this.facing = MapDirection.getRandom();
         generateGenes(gnomesValue);
         setEnergy(maxEnergyValue);
         setEnergy(startEnergyOfAnimalsValue);
+        this.dayOfBirth=dayOfBirth;
     }
     public Vector2d getPosition() {
         return pos;
@@ -36,6 +39,22 @@ public class Animal implements WorldElement {
 
     public void setDeathDay(int day){
         deathDay=day;
+    }
+
+    public int getDeathDay(){
+        return deathDay;
+    }
+
+    public int getDayOfBirth(){
+        return dayOfBirth;
+    }
+
+    public int getLiveSpan(){
+        return deathDay-dayOfBirth;
+    }
+
+    public int getNumberOfChildren(){
+        return numberOfChildren;
     }
 
     public boolean isAlive(){

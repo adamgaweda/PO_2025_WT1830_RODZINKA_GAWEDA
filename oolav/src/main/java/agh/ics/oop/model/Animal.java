@@ -4,7 +4,6 @@ import agh.ics.oop.MapDirection;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 public class Animal implements WorldElement {
     MapDirection facing = MapDirection.North;
@@ -12,7 +11,7 @@ public class Animal implements WorldElement {
     int energy = 0;
     List<MapDirection> gen = new ArrayList<>();
     int maxEnergy = 0;
-    int whatGenCurentlyOn = 0;
+    int whatGenCurrentlyOn = 0;
     Integer deathDay = null;
     int numberOfGrassEaten = 0;
 
@@ -84,9 +83,9 @@ public class Animal implements WorldElement {
         return pos.equals(position);
     }
 
-    public MapDirection getWhatGenCurentlyOn(){
-        MapDirection currentGen=gen.get(whatGenCurentlyOn);
-        whatGenCurentlyOn = (whatGenCurentlyOn+1)%gen.size();
+    public MapDirection getWhatGenCurrentlyOn(){
+        MapDirection currentGen=gen.get(whatGenCurrentlyOn);
+        whatGenCurrentlyOn = (whatGenCurrentlyOn +1)%gen.size();
         return currentGen;
     }
 

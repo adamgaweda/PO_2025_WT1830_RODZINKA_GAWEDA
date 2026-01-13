@@ -48,7 +48,7 @@ public class GrassField extends AbstractWorldMap {
 
     public Animal move(Animal animal){
         Vector2d vectorAnimal = animal.pos;
-        MapDirection mapDirection = animal.getWhatGenCurentlyOn();
+        MapDirection mapDirection = animal.getWhatGenCurrentlyOn();
         switch (mapDirection){
             case North -> animal.facing = animal.facing.turnIntTimes(0);
             case NorthEast -> animal.facing = animal.facing.turnIntTimes(1);

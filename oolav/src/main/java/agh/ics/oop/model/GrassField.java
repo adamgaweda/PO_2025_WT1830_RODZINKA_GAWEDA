@@ -43,7 +43,7 @@ public class GrassField extends AbstractWorldMap {
             emptySquares--;
         }
         animals.get(vector2d).add(animal);
-
+        notifyMapChanged("Animal placed at: " + animal.getPosition());
     }
 
     public Animal move(Animal animal){

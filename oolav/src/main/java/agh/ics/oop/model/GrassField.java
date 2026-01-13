@@ -46,7 +46,7 @@ public class GrassField extends AbstractWorldMap {
 
     }
 
-    public void move(Animal animal){
+    public Animal move(Animal animal){
         Vector2d vectorAnimal = animal.pos;
         MapDirection mapDirection = animal.getWhatGenCurentlyOn();
         switch (mapDirection){
@@ -60,16 +60,14 @@ public class GrassField extends AbstractWorldMap {
             case NorthWest -> animal.facing = animal.facing.turnIntTimes(7);
         }
         animal.pos.add(animal.facing.toUnitVector());
-        Vector2d topRight = getCurrentBounds().topRightEdgeOfTheMap();
-        if (vectorAnimal.getX()>topRight.getX()){
+        if (vectorAnimal.getX()>topRightCorner.getX()){
             vectorAnimal= new Vector2d(0,vectorAnimal.getY());
         }
         if (vectorAnimal.getX()<0){
-            vectorAnimal= new Vector2d(topRight.getX(), vectorAnimal.getY());
-
+            vectorAnimal= new Vector2d(topRightCorner.getX(), vectorAnimal.getY());
         }
-        if (vectorAnimal.getY()> topRight.getY()){
-            vectorAnimal = new Vector2d(vectorAnimal.getX(), topRight.getY());
+        if (vectorAnimal.getY()> topRightCorner.getY()){
+            vectorAnimal = new Vector2d(vectorAnimal.getX(), topRightCorner.getY());
             animal.facing = animal.facing.turnAround();
         }
         if (vectorAnimal.getY()<0){
@@ -79,9 +77,7 @@ public class GrassField extends AbstractWorldMap {
         animals.remove(animal.pos);
         animal.pos = vectorAnimal;
         animal.changeEnergy(-energyLoss);
-        if (animal.energy>-1){
-            place(animal);
-        }
+        return animal;
     }
 
     public void place(Grass grass){

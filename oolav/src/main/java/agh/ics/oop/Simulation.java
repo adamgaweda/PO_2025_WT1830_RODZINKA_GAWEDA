@@ -14,7 +14,7 @@ import java.util.concurrent.TimeUnit;
 public class Simulation implements  Runnable {
     List<Animal> animals = new ArrayList<Animal>();
     GrassField worldMap;
-    private int numberOfGrassEachDayValue;
+    private final int numberOfGrassEachDayValue;
     int i =0;
     private int day = 0;
     private ScheduledExecutorService executorService;
@@ -78,7 +78,9 @@ public class Simulation implements  Runnable {
 
     private void moveAnimal(){
         for (Animal animal : animals){
-            worldMap.move(animal);
+            Animal animal1 = worldMap.move(animal);
+            animal=animal1;
+            animals.set(animals.indexOf(animal), animal1);
         }
     }
 

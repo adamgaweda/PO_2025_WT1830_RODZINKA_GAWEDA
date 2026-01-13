@@ -12,8 +12,8 @@ public class Animal implements WorldElement {
     int energy = 0;
     List<MapDirection> gen = new ArrayList<>();
     int maxEnergy = 0;
-    final UUID uuid;
     int whatGenCurentlyOn = 0;
+    Integer deathDay = null;
 
     public void defaultAnimal() {
         this.pos = new Vector2d(2,2);
@@ -21,13 +21,25 @@ public class Animal implements WorldElement {
 
     public Animal(Vector2d pos) {
         this.pos = pos;
-         uuid =  UUID.randomUUID();
     }
 
-    public UUID getUuid(){return uuid;}
-
+    public Animal(Vector2d birthVector, int gnomesValue,int maxEnergyValue,int startEnergyOfAnimalsValue){
+        this.pos = birthVector;
+        this.facing = MapDirection.getRandom();
+        generateGenes(gnomesValue);
+        setEnergy(maxEnergyValue);
+        setEnergy(startEnergyOfAnimalsValue);
+    }
     public Vector2d getPosition() {
         return pos;
+    }
+
+    public void setDeathDay(int day){
+        deathDay=day;
+    }
+
+    public boolean isAlive(){
+        return deathDay==null;
     }
 
     @Override
@@ -57,6 +69,8 @@ public class Animal implements WorldElement {
     public int getMaxEnergy(){
         return maxEnergy;
     }
+
+    public int getEnergy(){return energy;}
 
     public boolean isAT(Vector2d position) {
         return pos.equals(position);

@@ -119,7 +119,6 @@ public class SimulationPresenter implements MapChangeListener {
         int energyLostDuringMatingValue = getValueFromTextField(energyLostDuringMating) < 0 ? defaultMapValue : getValueFromTextField(energyLostDuringMating);
         int mutationsInChildrenValue = getValueFromTextField(mutationsInChildren) < 0 ? defaultMapValue : getValueFromTextField(mutationsInChildren);
         int gnomesValue = getValueFromTextField(gnomes) < 0 ? defaultMapValue : getValueFromTextField(gnomes);
-        List<Animal> animals = createAnimals(width,height,startingNumberOfAnimalsValue,gnomesValue,startEnergyOfAnimalsValue,maxEnergyValue);
         GrassField map = new GrassField(width,height);
         map.generateGrass(numberOfGrassAtTheStartValue);
         map.addObserver((worldMap, message) -> {
@@ -129,7 +128,8 @@ public class SimulationPresenter implements MapChangeListener {
         try {
             SimulationApp simulationApp = new SimulationApp();
             simulationApp.launchSimulationWindow(map);
-            Simulation simulation = new Simulation(animals, map);
+            Simulation simulation = new Simulation(map,numberOfGrassAtTheStartValue,numberOfGrassEachDayValue,
+                    startingNumberOfAnimalsValue,startEnergyOfAnimalsValue,gnomesValue,maxEnergyValue);
             Thread thread = new Thread(simulation);
             thread.start();
         } catch (IOException e){
@@ -160,18 +160,5 @@ public class SimulationPresenter implements MapChangeListener {
         }
     }
 
-    private List<Animal> createAnimals(int mapWidth, int mapHeight, int howManyAnimals,
-                                           int howManyGenes, int startingEnergy, int maxEnergy){
-        Vector2d mapSize = new Vector2d(mapWidth,mapHeight);
-        List<Animal> animals = new ArrayList<>();
-        for(int i=0; i<howManyAnimals;i++){
-            Animal animal = new Animal(mapSize.randomVectorWithinGivenVector());
-            animal.generateGenes(howManyGenes);
-            animal.setEnergy(maxEnergy);
-            animal.setEnergy(startingEnergy);
-            animals.add(animal);
-        }
-        return animals;
-    }
 
 }

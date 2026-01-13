@@ -40,6 +40,10 @@ public abstract class AbstractWorldMap implements WorldMap {
 
     @Override
     public void place(Animal animal) throws IncorrectPositionException{
+        /*Vector2d vector2d = animal.getPosition();
+        if (!animals.containsKey(vector2d))
+            animals.put(vector2d, new HashSet<>());
+        animals.get(vector2d).add(animal);*/
         animals.put(animal.getPosition(), animal);
         notifyMapChanged("Animal placed at: " + animal.getPosition());
     }

@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Random;
 
 public enum MapDirection {
-    North,East,South,West,NorthEast,NorthWest,SouthEast,SouthWest;
+    North,NorthEast,East,SouthEast,South,SouthWest,West,NorthWest;
 
     private static final List<MapDirection> VALUES = List.of(values());
     private static final int SIZE = VALUES.size();
@@ -106,6 +106,14 @@ public enum MapDirection {
 
     public static MapDirection getRandom(){
         return VALUES.get(RANDOM.nextInt(SIZE));
+    }
+
+    public MapDirection turnIntTimes(int times){
+        MapDirection direction = this;
+        for (int i = 0 ; i < times; i++){
+            direction=direction.next();
+        }
+        return direction;
     }
 }
 

@@ -130,6 +130,10 @@ public class GrassField extends AbstractWorldMap {
                 .collect(Collectors.toSet());
     }
 
+    public Set<Animal> getAnimalsAt(Vector2d vector2d){
+        return Collections.unmodifiableSet(animals.getOrDefault(vector2d, new HashSet<>()));
+    }
+
     public boolean isAnimalAt(Vector2d position){
         return animals.containsKey(position) && !animals.get(position).isEmpty();
     }

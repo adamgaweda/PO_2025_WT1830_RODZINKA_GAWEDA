@@ -4,7 +4,9 @@ import agh.ics.oop.model.*;
 import agh.ics.oop.model.util.IncorrectPositionException;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -18,11 +20,14 @@ public class Simulation implements  Runnable {
     private ScheduledExecutorService executorService;
     private int speedOfSimulation = 1;
     private final List<MapChangeListener> listeners = new ArrayList<>();
+    private final int energyPerGrassEatenValue;
 
     public Simulation(GrassField map, int numberOfGrassAtTheStartValue, int numberOfGrassEachDayValue,
-                      int startingNumberOfAnimalsValue, int startEnergyOfAnimalsValue,int gnomesValue,int maxEnergyValue) {
+                      int startingNumberOfAnimalsValue, int startEnergyOfAnimalsValue,int gnomesValue,int maxEnergyValue,
+                      int energyPerGrassEatenValue) {
         this.worldMap = map;
         this.numberOfGrassEachDayValue=numberOfGrassEachDayValue;
+        this.energyPerGrassEatenValue=energyPerGrassEatenValue;
         if (numberOfGrassAtTheStartValue>map.getCurrentBounds().topRightEdgeOfTheMap().getY()*map.getCurrentBounds().topRightEdgeOfTheMap().getX()){
             throw new IllegalArgumentException("Initial number of grass greater then map size");
         }
@@ -78,7 +83,16 @@ public class Simulation implements  Runnable {
     }
 
     private void eatGrass(){
-
+        List<Grass> grasses = worldMap.getGrasses();
+        for (Grass grass : grasses){
+            Set<Animal> animalsOnGrass = worldMap.getAnimalsAt(grass.getPosition());
+            if (animalsOnGrass.isEmpty()){
+                continue;
+            }
+            Animal animal = animalsOnGrass.stream().findFirst().get();
+            animal.changeEnergy(energyPerGrassEatenValue);
+            worldMap.remove(grass);
+        }
     }
 
     private void animalReproduction(){

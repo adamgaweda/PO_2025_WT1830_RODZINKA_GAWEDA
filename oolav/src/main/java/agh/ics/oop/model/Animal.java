@@ -14,6 +14,7 @@ public class Animal implements WorldElement {
     int maxEnergy = 0;
     int whatGenCurentlyOn = 0;
     Integer deathDay = null;
+    int numberOfGrassEaten = 0;
 
     public void defaultAnimal() {
         this.pos = new Vector2d(2,2);
@@ -42,6 +43,13 @@ public class Animal implements WorldElement {
         return deathDay==null;
     }
 
+    public void increaseNumberOfGrassEaten(){
+        numberOfGrassEaten++;
+    }
+
+    public int getNumberOfGrassEaten(){
+        return numberOfGrassEaten;
+    }
     @Override
     public void setPos(Vector2d position) {
         this.pos = position;

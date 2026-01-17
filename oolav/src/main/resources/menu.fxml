@@ -27,6 +27,8 @@
             <TextField fx:id="mutationsInChildren" promptText="How many mutations should occur in children"/>
             <TextField fx:id="gnomes" promptText="How long should the animals genomes be"/>
             <TextField fx:id="startEnergy" promptText="Start Energy"/>
+            <TextField fx:id="chanceToGenerateGrassInTheJungle" promptText="What percent change for the Grass to generate in the jungle "/>
+            <TextField fx:id="jungleHeight" promptText="What height should the jungle have"/>
 
             <Button text="Start" onAction="#onSimulationStartClicked"/>
         </VBox>

@@ -7,19 +7,21 @@ import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
 public class GrassField extends AbstractWorldMap {
-    private final Map<Vector2d, Set<Animal>> animals = new HashMap<>(1);
+    private final Map<Vector2d, Set<Animal>> animals = new HashMap<>();
     final Vector2d topRightCorner;
     final Vector2d bottomLeftCorner = new Vector2d(0,0);
     Map<Vector2d, Grass> grasses = new HashMap<>();
     private int emptySquares;
+    private final GrassGenerator grassGenerator;
 
-    public GrassField(int width,int height) {
+    public GrassField(int width,int height, int chanceToGenerateInJungle) {
         if (width< 1 || height < 1){
             throw new IllegalArgumentException("Map dimensions must be positive");
         }
         topRightCorner = new Vector2d(width,height);
         final UUID uuid = UUID.randomUUID();
         this.emptySquares=width*height;
+        this.grassGenerator = new GrassGenerator(this, getHeight(),getWidth(), chanceToGenerateInJungle);
     }
 
     public void remove(Animal animal){
@@ -43,7 +45,7 @@ public class GrassField extends AbstractWorldMap {
             emptySquares--;
         }
         animals.get(vector2d).add(animal);
-        notifyMapChanged("Animal placed at: " + animal.getPosition());
+        notifyMapChanged("Animal placed at: " + animal.getPosition(), animal.getPosition());
     }
 
     public Animal move(Animal animal){
@@ -85,10 +87,10 @@ public class GrassField extends AbstractWorldMap {
         if (grasses.containsKey(vector2d))
             throw new IllegalArgumentException("grass is already there");
         grasses.put(vector2d,grass);
-        if (animals.containsKey(vector2d) || animals.get(vector2d).isEmpty()){
+        if (!animals.containsKey(vector2d) || animals.get(vector2d).isEmpty()){
             emptySquares--;
         }
-        notifyMapChanged("grass placed at "+vector2d);
+        notifyMapChanged("grass placed at: "+vector2d, vector2d);
     }
 
     public void remove(Grass grass){
@@ -100,7 +102,7 @@ public class GrassField extends AbstractWorldMap {
         if (!animals.containsKey(vector2d) || animals.get(vector2d).isEmpty()){
             emptySquares++;
         }
-        notifyMapChanged("grass removed from "+vector2d);
+        notifyMapChanged("grass removed from: "+vector2d, vector2d);
     }
 
     @Override
@@ -146,19 +148,18 @@ public class GrassField extends AbstractWorldMap {
         return grasses.containsKey(position);
     }
 
+    @Override
+    public int getWidth() {
+        return topRightCorner.getX() - bottomLeftCorner.getX();
+    }
+
     public int getEmptySquares(){
         return emptySquares;
     }
 
-    public void generateGrass(int numberOfGrassToGenerate){
+    public void generateGrass(int numberOfGrassToGenerate, int chanceToGenerateInTheJungle){
         for (int i = 0; i < numberOfGrassToGenerate; i++) {
-            int randomNum = ThreadLocalRandom.current().nextInt(0, topRightCorner.getX()* topRightCorner.getY() + 1);
-            Vector2d grassPosition = new Vector2d(randomNum/ topRightCorner.getX(), randomNum% topRightCorner.getY());
-            while (isOccupied(grassPosition)) {
-                randomNum = ThreadLocalRandom.current().nextInt(0, topRightCorner.getX()* topRightCorner.getY() + 1);
-                grassPosition = new Vector2d(randomNum/ topRightCorner.getX(), randomNum% topRightCorner.getY());
-            }
-            grasses.put(grassPosition, new Grass(grassPosition));
+            place(grassGenerator.generateGrass());
         }
     }
 

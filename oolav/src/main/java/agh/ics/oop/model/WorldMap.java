@@ -54,4 +54,12 @@ public interface WorldMap extends MoveValidator {
     UUID getId();
 
     List<Animal> getOrderedAnimals();
+
+    public void addObserver(MapChangeListener mapChangeListener);
+
+    public boolean grassAt(Vector2d position);
+
+    int getHeight();
+
+    int getWidth();
 }

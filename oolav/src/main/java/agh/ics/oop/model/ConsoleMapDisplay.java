@@ -4,7 +4,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class ConsoleMapDisplay implements MapChangeListener {
     private Long numberOfChanges = 0L;
-    public void mapChanged(WorldMap worldMap, String message) {
+    public void mapChanged(WorldMap worldMap, String message, Vector2d vector2d) {
         synchronized (System.out) {
         System.out.println(message);
         System.out.println(worldMap.toString());

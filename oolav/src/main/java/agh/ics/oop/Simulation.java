@@ -2,6 +2,7 @@ package agh.ics.oop;
 
 import agh.ics.oop.model.*;
 import agh.ics.oop.model.util.IncorrectPositionException;
+import javafx.animation.AnimationTimer;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -11,7 +12,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-public class Simulation implements  Runnable {
+public class Simulation extends AnimationTimer implements  Runnable {
     List<Animal> animals = new ArrayList<Animal>();
     List<Animal> deadAnimals = new ArrayList<>();
     List<Animal> allAnimals = new ArrayList<>();
@@ -23,17 +24,24 @@ public class Simulation implements  Runnable {
     private int speedOfSimulation = 1;
     private final List<MapChangeListener> listeners = new ArrayList<>();
     private final int energyPerGrassEatenValue;
+    private long FRAMES_PER_SECOND=50L;
+    private long INTERVAL=10000000L / FRAMES_PER_SECOND;
+    private long last = 0;
+    private final int chanceToGenerateGrassInTheJungle;
+    private final GrassGenerator grassGenerator;
 
     public Simulation(GrassField map, int numberOfGrassAtTheStartValue, int numberOfGrassEachDayValue,
                       int startingNumberOfAnimalsValue, int startEnergyOfAnimalsValue,int gnomesValue,int maxEnergyValue,
-                      int energyPerGrassEatenValue) {
+                      int energyPerGrassEatenValue, int chanceToGenerateGrassInTheJungle, int jungleHeightValue) {
         this.worldMap = map;
         this.numberOfGrassEachDayValue=numberOfGrassEachDayValue;
         this.energyPerGrassEatenValue=energyPerGrassEatenValue;
+        this.chanceToGenerateGrassInTheJungle=chanceToGenerateGrassInTheJungle;
+        this.grassGenerator = new GrassGenerator(map,jungleHeightValue,map.getWidth(),chanceToGenerateGrassInTheJungle);
         if (numberOfGrassAtTheStartValue>map.getCurrentBounds().topRightEdgeOfTheMap().getY()*map.getCurrentBounds().topRightEdgeOfTheMap().getX()){
             throw new IllegalArgumentException("Initial number of grass greater then map size");
         }
-        map.generateGrass(numberOfGrassAtTheStartValue);
+        map.generateGrass(numberOfGrassAtTheStartValue,chanceToGenerateGrassInTheJungle);
         Vector2d mapSize = new Vector2d(map.getCurrentBounds().topRightEdgeOfTheMap().getX(),map.getCurrentBounds().topRightEdgeOfTheMap().getY());
         for(int i=0; i<startingNumberOfAnimalsValue;i++){
             Animal generatedAnimal = new Animal(mapSize,gnomesValue,maxEnergyValue,startEnergyOfAnimalsValue,day);
@@ -43,6 +51,7 @@ public class Simulation implements  Runnable {
         }
     }
     public void run(){
+        System.out.println("aaaaa");
         removeDeadAnimals();
         moveAnimal();
         eatGrass();
@@ -58,7 +67,8 @@ public class Simulation implements  Runnable {
     public void start(){
         if (isRunning()) throw new RuntimeException("Simulation is already running");
         executorService = Executors.newSingleThreadScheduledExecutor();
-        executorService.scheduleWithFixedDelay(this,500/speedOfSimulation,1000/speedOfSimulation, TimeUnit.MILLISECONDS);
+        executorService.scheduleWithFixedDelay(this,500/speedOfSimulation,
+                1000/speedOfSimulation, TimeUnit.MILLISECONDS);
     }
 
     public void setSpeedOfSimulation(int speed){
@@ -66,6 +76,15 @@ public class Simulation implements  Runnable {
         if (isRunning()) {
             executorService.shutdown();
             start();
+        }
+    }
+
+
+    @Override
+    public void handle(long now) {
+        if (now - last > INTERVAL){
+            run();
+            last = now;
         }
     }
 
@@ -106,7 +125,9 @@ public class Simulation implements  Runnable {
     }
 
     private void generateGrass(){
-
+        int toGenerate = Math.min(numberOfGrassEachDayValue,worldMap.getWidth()* worldMap.getHeight() - worldMap.numberOfGrasses());
+        for (int i = 0; i < toGenerate; i++)
+            worldMap.place(grassGenerator.generateGrass());
     }
 
     public double getAverageAnimalLiveSpan(){
@@ -123,5 +144,12 @@ public class Simulation implements  Runnable {
 
     List<Animal> getAnimals() {
         return new ArrayList<Animal>(animals);
+    }
+
+    public static boolean getTruePercentOfTheTime(int percent){
+        if (percent > 100 || percent < 0){
+            throw new IllegalArgumentException("percent chance must be within [0,100]");
+        }
+        return Math.random() < (double) (percent /100);
     }
 }

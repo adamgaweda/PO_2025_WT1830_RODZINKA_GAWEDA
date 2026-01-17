@@ -32,10 +32,15 @@ public abstract class AbstractWorldMap implements WorldMap {
         mapChangeListeners.remove(mapChangeListener);
     }
 
-    protected void notifyMapChanged(String message) {
+    protected void notifyMapChanged(String message, Vector2d vector2d) {
         for (MapChangeListener mapChangeListener : mapChangeListeners) {
-            mapChangeListener.mapChanged(this, message);
+            mapChangeListener.mapChanged(this, message, vector2d);
         }
+    }
+
+    @Override
+    public int getHeight() {
+        return getCurrentBounds().getHeight();
     }
 
     @Override
@@ -45,7 +50,7 @@ public abstract class AbstractWorldMap implements WorldMap {
             animals.put(vector2d, new HashSet<>());
         animals.get(vector2d).add(animal);*/
         animals.put(animal.getPosition(), animal);
-        notifyMapChanged("Animal placed at: " + animal.getPosition());
+        notifyMapChanged("Animal placed at: " + animal.getPosition(), animal.getPosition());
     }
 
     @Override

@@ -68,6 +68,11 @@ public class Animal implements WorldElement {
     public int getNumberOfGrassEaten(){
         return numberOfGrassEaten;
     }
+
+    public void eatGrass(int energyFromGrass){
+        numberOfGrassEaten++;
+        changeEnergy(energyFromGrass);
+    }
     @Override
     public void setPos(Vector2d position) {
         this.pos = position;

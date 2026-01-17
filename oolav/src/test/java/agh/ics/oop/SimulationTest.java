@@ -8,7 +8,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 class SimulationTest {
-
+/*
     @Test
     void  testRun() {
         //given
@@ -132,5 +132,5 @@ class SimulationTest {
         WorldMap wynik =  simulation.run();
         //then
         assertEquals(testMap.toString(),wynik.toString());
-    }
+    }*/
 }

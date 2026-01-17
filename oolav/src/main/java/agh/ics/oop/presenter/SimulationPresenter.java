@@ -53,6 +53,10 @@ public class SimulationPresenter implements MapChangeListener {
     private TextField mutationsInChildren;
     @FXML
     private TextField gnomes;
+    @FXML
+    private TextField chanceToGenerateGrassInTheJungle;
+    @FXML
+    private TextField jungleHeight;
 
     private final int defaultMapValue = 8;
     private final int defaultEnergyValue = 1;
@@ -106,8 +110,6 @@ public class SimulationPresenter implements MapChangeListener {
 
     @FXML
     public void onSimulationStartClicked(){
-        String moveList = moveListText.getText();
-        List<MoveDirection> directions = OptionsParser.parse(moveList.split("\\s+"));
         int width = getValueFromTextField(mapWidth) < 0 ? defaultMapValue : getValueFromTextField(mapWidth);
         int height = getValueFromTextField(mapHeight) < 0 ? defaultMapValue : getValueFromTextField(mapHeight);
         int numberOfGrassAtTheStartValue = getValueFromTextField(numberOfGrassAtTheStart) < 0 ? defaultMapValue : getValueFromTextField(numberOfGrassAtTheStart);
@@ -121,17 +123,20 @@ public class SimulationPresenter implements MapChangeListener {
         int energyLostDuringMatingValue = getValueFromTextField(energyLostDuringMating) < 0 ? defaultMapValue : getValueFromTextField(energyLostDuringMating);
         int mutationsInChildrenValue = getValueFromTextField(mutationsInChildren) < 0 ? defaultMapValue : getValueFromTextField(mutationsInChildren);
         int gnomesValue = getValueFromTextField(gnomes) < 0 ? defaultMapValue : getValueFromTextField(gnomes);
-        List<Animal> animals = createAnimals(width,height,startingNumberOfAnimalsValue,gnomesValue,startEnergyOfAnimalsValue,maxEnergyValue);
-        GrassField map = new GrassField(width,height);
-        map.generateGrass(numberOfGrassAtTheStartValue);
-        map.addObserver((worldMap, message) -> {
+        int chanceToGenerateGrassInTheJungleValue = getValueFromTextField(chanceToGenerateGrassInTheJungle) < 0 ? 80 : getValueFromTextField(chanceToGenerateGrassInTheJungle);
+        int jungleHeightValue = getValueFromTextField(jungleHeight) < 0 ? (int) (defaultMapValue * 0.2) : getValueFromTextField(jungleHeight);
+        GrassField map = new GrassField(width,height,chanceToGenerateGrassInTheJungleValue);
+        map.generateGrass(numberOfGrassAtTheStartValue,chanceToGenerateGrassInTheJungleValue);
+        map.addObserver((worldMap, message, vector2d) -> {
             String timeOfDay = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy hh-mm-ss"));
             System.out.printf("%s %s%n", timeOfDay, message);
         });
         try {
             SimulationApp simulationApp = new SimulationApp();
             simulationApp.launchSimulationWindow(map);
-            Simulation simulation = new Simulation(animals, directions, map);
+            Simulation simulation = new Simulation(map,numberOfGrassAtTheStartValue,numberOfGrassEachDayValue,
+                    startingNumberOfAnimalsValue,startEnergyOfAnimalsValue,gnomesValue,maxEnergyValue,energyPerGrassEatenValue,
+                    chanceToGenerateGrassInTheJungleValue,jungleHeightValue);
             Thread thread = new Thread(simulation);
             thread.start();
         } catch (IOException e){
@@ -146,7 +151,7 @@ public class SimulationPresenter implements MapChangeListener {
     }
 
     @Override
-    public void mapChanged(WorldMap worldMap, String message) {
+    public void mapChanged(WorldMap worldMap, String message, Vector2d vector2d) {
         Platform.runLater(() -> {
             moveDescriptionLabel.setText(message);
             drawMap();
@@ -154,7 +159,6 @@ public class SimulationPresenter implements MapChangeListener {
     }
 
     private int getValueFromTextField(TextField test) throws RuntimeException{
-        System.out.println("aaa");
         try {
             if (test.getText() == null || test.getText().trim().isEmpty()) return -1;
             return Integer.parseInt(test.getText());
@@ -163,18 +167,5 @@ public class SimulationPresenter implements MapChangeListener {
         }
     }
 
-    private List<Animal> createAnimals(int mapWidth, int mapHeight, int howManyAnimals,
-                                           int howManyGenes, int startingEnergy, int maxEnergy){
-        Vector2d mapSize = new Vector2d(mapWidth,mapHeight);
-        List<Animal> animals = new ArrayList<>();
-        for(int i=0; i<howManyAnimals;i++){
-            Animal animal = new Animal(mapSize.randomVectorWithinGivenVector());
-            animal.generateGenes(howManyGenes);
-            animal.setEnergy(maxEnergy);
-            animal.setEnergy(startingEnergy);
-            animals.add(animal);
-        }
-        return animals;
-    }
 
 }

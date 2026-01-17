@@ -1,6 +1,7 @@
 package agh.ics.oop.model.util;
 
 import agh.ics.oop.model.MapChangeListener;
+import agh.ics.oop.model.Vector2d;
 import agh.ics.oop.model.WorldMap;
 
 import java.io.File;
@@ -9,7 +10,7 @@ import java.io.FileWriter;
 public class FileMapDisplay implements MapChangeListener {
 
     @Override
-    public void mapChanged(WorldMap worldMap, String message) {
+    public void mapChanged(WorldMap worldMap, String message, Vector2d vector2d) {
         File file=new File(String.format("map_%s",worldMap.getId()));
         try (FileWriter fileWriter = new FileWriter(file,true)){
             fileWriter.write("\n");

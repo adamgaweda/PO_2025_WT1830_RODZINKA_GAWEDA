@@ -21,4 +21,14 @@ public class RectangularMap extends AbstractWorldMap {
         return new  Boundary(bottomLeftEdgeOfTheMap, topEdgeOfTheMap);
     }
 
+    @Override
+    public boolean grassAt(Vector2d position) {
+        return false;
+    }
+
+    @Override
+    public int getWidth() {
+        return 0;
+    }
+
 }

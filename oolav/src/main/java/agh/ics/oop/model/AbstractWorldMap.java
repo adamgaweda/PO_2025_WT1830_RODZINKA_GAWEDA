@@ -1,6 +1,7 @@
 package agh.ics.oop.model;
 
 
+import agh.ics.oop.MapDirection;
 import agh.ics.oop.model.util.IncorrectPositionException;
 import agh.ics.oop.model.util.MapVisualizer;
 
@@ -31,27 +32,31 @@ public abstract class AbstractWorldMap implements WorldMap {
         mapChangeListeners.remove(mapChangeListener);
     }
 
-    protected void notifyMapChanged(String message) {
+    protected void notifyMapChanged(String message, Vector2d vector2d) {
         for (MapChangeListener mapChangeListener : mapChangeListeners) {
-            mapChangeListener.mapChanged(this, message);
+            mapChangeListener.mapChanged(this, message, vector2d);
         }
+    }
+
+    @Override
+    public int getHeight() {
+        return getCurrentBounds().getHeight();
     }
 
     @Override
     public void place(Animal animal) throws IncorrectPositionException{
+        /*Vector2d vector2d = animal.getPosition();
+        if (!animals.containsKey(vector2d))
+            animals.put(vector2d, new HashSet<>());
+        animals.get(vector2d).add(animal);*/
         animals.put(animal.getPosition(), animal);
-        notifyMapChanged("Animal placed at: " + animal.getPosition());
+        notifyMapChanged("Animal placed at: " + animal.getPosition(), animal.getPosition());
     }
 
     @Override
-    public void move(Animal animal, MoveDirection direction) {
+    public void move(Animal animal, MapDirection mapDirection) {
         Vector2d vectorAnimal = animal.pos;
-        switch (direction) {
-            case FORWARD -> vectorAnimal = vectorAnimal.add(animal.facing.toUnitVector());
-            case BACKWARD -> vectorAnimal = vectorAnimal.sub(animal.facing.toUnitVector());
-            case LEFT-> animal.facing = animal.facing.prev();
-            case RIGHT -> animal.facing = animal.facing.next();
-        }
+        vectorAnimal.add(mapDirection.toUnitVector());
         Vector2d topRight = getCurrentBounds().topRightEdgeOfTheMap();
         if (vectorAnimal.getX()>topRight.getX()){
             vectorAnimal= new Vector2d(0,vectorAnimal.getY());

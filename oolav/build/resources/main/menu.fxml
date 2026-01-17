@@ -13,7 +13,23 @@
             fx:controller="agh.ics.oop.presenter.SimulationPresenter">
     <center>
         <VBox spacing="10" alignment="CENTER">
-            <TextField fx:id="moveListText" promptText="Enter moves"/>
+            <TextField fx:id="mapWidth" promptText="Map Width"/>
+            <TextField fx:id="mapHeight" promptText="Map Height"/>
+            <TextField fx:id="numberOfGrassAtTheStart" promptText="Number of Grass at the start"/>
+            <TextField fx:id="energyPerGrassEaten" promptText="How much energy should the animals get"/>
+            <TextField fx:id="numberOfGrassEachDay" promptText="How much grass should grow each day"/>
+            <TextField fx:id="startingNumberOfAnimals" promptText="How many animals should spawn at the start"/>
+            <TextField fx:id="startEnergyOfAnimals" promptText="How much energy should the animals spawn in with"/>
+            <TextField fx:id="lostEnergyAtTheEndOfTheDay" promptText="How much energy should the animals lose each day"/>
+            <TextField fx:id="maxEnergy" promptText="What is the animals max energy"/>
+            <TextField fx:id="energyRequiredToMate" promptText="How much energy should both animals have to start mating"/>
+            <TextField fx:id="energyLostDuringMating" promptText="How much energy should the animals lose while mating"/>
+            <TextField fx:id="mutationsInChildren" promptText="How many mutations should occur in children"/>
+            <TextField fx:id="gnomes" promptText="How long should the animals genomes be"/>
+            <TextField fx:id="startEnergy" promptText="Start Energy"/>
+            <TextField fx:id="chanceToGenerateGrassInTheJungle" promptText="What percent change for the Grass to generate in the jungle "/>
+            <TextField fx:id="jungleHeight" promptText="What height should the jungle have"/>
+
             <Button text="Start" onAction="#onSimulationStartClicked"/>
         </VBox>
     </center>

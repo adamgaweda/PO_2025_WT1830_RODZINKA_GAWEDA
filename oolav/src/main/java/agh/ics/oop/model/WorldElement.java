@@ -6,4 +6,6 @@ public interface WorldElement {
     void setPos(Vector2d position);
 
     boolean isAT(Vector2d position);
+
+    String getImage();
 }

@@ -15,11 +15,18 @@ public class Grass implements WorldElement {
     }
     @Override
     public String toString() {
-        return "*";
+        return "Trawa";
     }
 
     @Override
     public boolean isAT(Vector2d position) {
         return position.equals(this.position);
     }
+
+
+    @Override
+    public String getImage(){
+        return "grass.png";
+    }
+
 }

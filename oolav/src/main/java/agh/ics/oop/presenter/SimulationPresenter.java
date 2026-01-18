@@ -100,9 +100,14 @@ public class SimulationPresenter implements MapChangeListener {
             for (int j = height; j > -1; j--){
                 Vector2d postion = new Vector2d(i + bottomLeftEdgeOfTheMap.getX(), topRightEdgeOfTheMap.getY()-j);
                 if (worldMap.isOccupied(postion)){
-                    Label label = new Label(worldMap.objectAt(postion).toString());
-                    mapGrid.add(label, i + 1, j + 1);
-                    GridPane.setHalignment(label, HPos.CENTER);
+                    Optional<WorldElement> optElement = worldMap.objectAt(postion);
+                    final int  col = i+1;
+                    final int row = j+1;
+                    optElement.ifPresent(element -> {
+                        WorldElementBox box = new WorldElementBox(element);
+                        mapGrid.add(box, col, row);
+                        GridPane.setHalignment(box, HPos.CENTER);
+                    });
                 }
             }
         }

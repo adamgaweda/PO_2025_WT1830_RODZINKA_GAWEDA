@@ -74,7 +74,7 @@ public class Animal implements WorldElement,Comparable<Animal>{
 
     @Override
     public String toString() {
-        return facing.toString();
+        return "Z: "+facing.toString();
     }
 
     public void setEnergy(int energy){
@@ -93,6 +93,20 @@ public class Animal implements WorldElement,Comparable<Animal>{
 
     public boolean isAT(Vector2d position) {
         return pos.equals(position);
+    }
+
+    @Override
+    public String getImage(){
+        return switch(facing) {
+            case North -> "up.png";
+            case South -> "down.png";
+            case NorthEast -> "animal.jpg";
+            case NorthWest -> "animal.jpg";
+            case East -> "left.png";
+            case West -> "right.png";
+            case SouthEast -> "animal.jpg";
+            case SouthWest -> "animal.jpg";
+        };
     }
 
     public MapDirection getWhatGenCurrentlyOn(){

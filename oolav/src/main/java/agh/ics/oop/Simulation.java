@@ -129,7 +129,16 @@ public class Simulation extends AnimationTimer implements  Runnable {
     }
 
     private void animalReproduction(){
-
+        for (Animal animal : animals){
+            Vector2d vector2d = animal.getPosition();
+            Set<Animal> animalsAtVector2d = worldMap.getAnimalsAt(vector2d);
+            if (animalsAtVector2d.isEmpty() || animalsAtVector2d.size()<2){
+                continue;
+            }
+            Animal father,mother;
+            father = animalsAtVector2d.stream().sorted(Comparator.reverseOrder()).limit(1).findFirst().get();
+            mother = animalsAtVector2d.stream().sorted(Comparator.reverseOrder()).limit(2).skip(1).findFirst().get();
+        }
     }
 
     private void generateGrass(){

@@ -22,7 +22,6 @@ public class Simulation extends AnimationTimer implements  Runnable {
     private long FRAMES_PER_SECOND=50L;
     private long INTERVAL=10000000L / FRAMES_PER_SECOND;
     private long last = 0;
-    private final int chanceToGenerateGrassInTheJungle;
     private final GrassGenerator grassGenerator;
 
     public Simulation(GrassField map, int numberOfGrassAtTheStartValue, int numberOfGrassEachDayValue,
@@ -31,12 +30,12 @@ public class Simulation extends AnimationTimer implements  Runnable {
         this.worldMap = map;
         this.numberOfGrassEachDayValue=numberOfGrassEachDayValue;
         this.energyPerGrassEatenValue=energyPerGrassEatenValue;
-        this.chanceToGenerateGrassInTheJungle=chanceToGenerateGrassInTheJungle;
         this.grassGenerator = new GrassGenerator(map,jungleHeightValue,map.getWidth(),chanceToGenerateGrassInTheJungle);
         if (numberOfGrassAtTheStartValue>map.getCurrentBounds().topRightEdgeOfTheMap().getY()*map.getCurrentBounds().topRightEdgeOfTheMap().getX()){
             throw new IllegalArgumentException("Initial number of grass greater then map size");
         }
-        map.generateGrass(numberOfGrassAtTheStartValue,chanceToGenerateGrassInTheJungle);
+        for (int i = 0; i < numberOfGrassAtTheStartValue;i++)
+            worldMap.place(grassGenerator.generateGrass());
         Vector2d mapSize = new Vector2d(map.getCurrentBounds().topRightEdgeOfTheMap().getX(),map.getCurrentBounds().topRightEdgeOfTheMap().getY());
         for(int i=0; i<startingNumberOfAnimalsValue;i++){
             Animal generatedAnimal = new Animal(mapSize,gnomesValue,maxEnergyValue,startEnergyOfAnimalsValue,day);
@@ -127,6 +126,6 @@ public class Simulation extends AnimationTimer implements  Runnable {
         if (percent > 100 || percent < 0){
             throw new IllegalArgumentException("percent chance must be within [0,100]");
         }
-        return Math.random() < (double) (percent /100);
+        return Math.random()*100 < percent;
     }
 }

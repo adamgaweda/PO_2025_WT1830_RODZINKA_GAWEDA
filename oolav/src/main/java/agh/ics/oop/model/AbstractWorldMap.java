@@ -44,6 +44,11 @@ public abstract class AbstractWorldMap implements WorldMap {
     }
 
     @Override
+    public int getWidth(){
+        return getCurrentBounds().getWidth();
+    }
+
+    @Override
     public void place(Animal animal) throws IncorrectPositionException{
         /*Vector2d vector2d = animal.getPosition();
         if (!animals.containsKey(vector2d))

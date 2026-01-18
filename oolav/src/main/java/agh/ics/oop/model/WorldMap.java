@@ -57,7 +57,7 @@ public interface WorldMap extends MoveValidator {
 
     public void addObserver(MapChangeListener mapChangeListener);
 
-    public boolean grassAt(Vector2d position);
+    public boolean isGrassAt(Vector2d position);
 
     int getHeight();
 

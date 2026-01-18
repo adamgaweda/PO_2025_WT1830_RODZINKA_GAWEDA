@@ -20,8 +20,8 @@ public class GrassGenerator implements MapChangeListener {
         mapJungleHeight=jungleHeight;
         mapJungleWidth=jungleWidth;
         this.chanceToGenerateInJungle=chanceToGenerateInJungle;
-        for (int x = 0; x<map.getWidth()+2; x++)
-            for (int y = 0; y<map.getHeight()+1; y++)
+        for (int x = 0; x<map.getWidth(); x++)
+            for (int y = 0; y<map.getHeight(); y++)
                 add(new Vector2d(x,y));
 
     }
@@ -41,14 +41,14 @@ public class GrassGenerator implements MapChangeListener {
             return notPreferred;
         if (notPreferred.isEmpty())
             return preferred;
-        if (Simulation.getTruePercentOfTheTime(chanceToGenerateInJungle))
-            return preferred;
+        if (Simulation.getTruePercentOfTheTime(chanceToGenerateInJungle)){
+            return preferred;}
         return notPreferred;
     }
 
     @Override
     public void mapChanged(WorldMap worldMap, String message, Vector2d vector2d) {
-        if (map.grassAt(vector2d))
+        if (map.isGrassAt(vector2d))
             remove(vector2d);
         else
             add(vector2d);

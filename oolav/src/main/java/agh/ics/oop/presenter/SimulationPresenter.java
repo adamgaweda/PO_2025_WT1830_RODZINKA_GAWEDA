@@ -136,7 +136,7 @@ public class SimulationPresenter implements MapChangeListener {
         int gnomesValue = getValueFromTextField(gnomes) < 0 ? defaultMapValue : getValueFromTextField(gnomes);
         int chanceToGenerateGrassInTheJungleValue = getValueFromTextField(chanceToGenerateGrassInTheJungle) < 0 ? 80 : getValueFromTextField(chanceToGenerateGrassInTheJungle);
         int jungleHeightValue = getValueFromTextField(jungleHeight) < 0 ? (int) (defaultMapValue * 0.2) : getValueFromTextField(jungleHeight);
-        GrassField map = new GrassField(width,height,chanceToGenerateGrassInTheJungleValue);
+        GrassField map = new GrassField(width,height,lostEnergyAtTheEndOfTheDayValue);
         map.addObserver((worldMap, message, vector2d) -> {
             String timeOfDay = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy hh-mm-ss"));
             System.out.printf("%s %s%n", timeOfDay, message);

@@ -12,16 +12,16 @@ public class GrassField extends AbstractWorldMap {
     final Vector2d bottomLeftCorner = new Vector2d(0,0);
     private final Map<Vector2d, Grass> grasses = new HashMap<>();
     private int emptySquares;
-    private final GrassGenerator grassGenerator;
+    private final int energyLoss;
 
-    public GrassField(int width,int height, int chanceToGenerateInJungle) {
+    public GrassField(int width,int height,int energyLoss) {
         if (width< 1 || height < 1){
             throw new IllegalArgumentException("Map dimensions must be positive");
         }
         topRightCorner = new Vector2d(width,height);
         final UUID uuid = UUID.randomUUID();
         this.emptySquares=width*height;
-        this.grassGenerator = new GrassGenerator(this, getHeight(),getWidth(), chanceToGenerateInJungle);
+        this.energyLoss=energyLoss;
     }
 
     public void remove(Animal animal){
@@ -45,7 +45,6 @@ public class GrassField extends AbstractWorldMap {
             emptySquares--;
         }
         animals.get(vector2d).add(animal);
-        notifyMapChanged("Animal placed at: " + animal.getPosition(), animal.getPosition());
     }
 
     public Animal move(Animal animal){
@@ -61,7 +60,7 @@ public class GrassField extends AbstractWorldMap {
             case West -> animal.facing = animal.facing.turnIntTimes(6);
             case NorthWest -> animal.facing = animal.facing.turnIntTimes(7);
         }
-        animal.pos = animal.pos.add(animal.facing.toUnitVector());
+        vectorAnimal = animal.pos.add(animal.facing.toUnitVector());
         if (vectorAnimal.getX()>topRightCorner.getX()){
             vectorAnimal= new Vector2d(0,vectorAnimal.getY());
         }
@@ -113,6 +112,13 @@ public class GrassField extends AbstractWorldMap {
         return Optional.of(grasses.get(position));
     }
 
+    public Grass grassAt(Vector2d position) {
+//        if (super.objectAt(position).isPresent()) {
+//            return super.objectAt(position);
+//        }
+        return grasses.get(position);
+    }
+
     @Override
     public boolean isOccupied(Vector2d position) {
         return super.isOccupied(position) || grasses.containsKey(position);
@@ -154,22 +160,10 @@ public class GrassField extends AbstractWorldMap {
         return emptySquares;
     }
 
-    public boolean grassAt(Vector2d position){
+    public boolean isGrassAt(Vector2d position){
         return grasses.containsKey(position);
     }
 
-    @Override
-    public int getWidth() {
-        return topRightCorner.getX() - bottomLeftCorner.getX();
-    }
-
-
-
-    public void generateGrass(int numberOfGrassToGenerate, int chanceToGenerateInTheJungle){
-        for (int i = 0; i < numberOfGrassToGenerate; i++) {
-            place(grassGenerator.generateGrass());
-        }
-    }
 
 
 

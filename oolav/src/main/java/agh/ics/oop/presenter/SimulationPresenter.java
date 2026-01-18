@@ -69,6 +69,8 @@ public class SimulationPresenter implements MapChangeListener {
     private TextField chanceToGenerateGrassInTheJungle;
     @FXML
     private TextField jungleHeight;
+    @FXML
+    private TextField chanceToGenerateCandy;
 
     private final int defaultMapValue = 8;
     private final int defaultEnergyValue = 1;
@@ -145,6 +147,7 @@ public class SimulationPresenter implements MapChangeListener {
         int gnomesValue = getValueFromTextField(gnomes) < 0 ? defaultMapValue : getValueFromTextField(gnomes);
         int chanceToGenerateGrassInTheJungleValue = getValueFromTextField(chanceToGenerateGrassInTheJungle) < 0 ? 80 : getValueFromTextField(chanceToGenerateGrassInTheJungle);
         int jungleHeightValue = getValueFromTextField(jungleHeight) < 0 ? (int) (defaultMapValue * 0.2) : getValueFromTextField(jungleHeight);
+        int chanceToGenerateCandyValue = getValueFromTextField(chanceToGenerateCandy) < 0 ? (int) (defaultMapValue * 0.2) : getValueFromTextField(chanceToGenerateCandy);
         GrassField map = new GrassField(width,height,lostEnergyAtTheEndOfTheDayValue);
         map.addObserver((worldMap, message, vector2d) -> {
             String timeOfDay = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy hh-mm-ss"));
@@ -156,7 +159,7 @@ public class SimulationPresenter implements MapChangeListener {
             Simulation simulation = new Simulation(map,numberOfGrassAtTheStartValue,numberOfGrassEachDayValue,
                     startingNumberOfAnimalsValue,startEnergyOfAnimalsValue,gnomesValue,maxEnergyValue,energyRequiredToChargeValue,
                     energyIntervalToChargeValue,maxChargeRangeValue,energyPerGrassEatenValue,
-                    chanceToGenerateGrassInTheJungleValue,jungleHeightValue);
+                    chanceToGenerateGrassInTheJungleValue,jungleHeightValue,chanceToGenerateCandyValue);
             this.thread = new Thread(simulation);
             clock = new Movement();
             clock.start();

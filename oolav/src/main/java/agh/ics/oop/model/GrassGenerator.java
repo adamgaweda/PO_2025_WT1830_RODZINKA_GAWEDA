@@ -20,8 +20,8 @@ public class GrassGenerator implements MapChangeListener {
         mapJungleHeight=jungleHeight;
         mapJungleWidth=jungleWidth;
         this.chanceToGenerateInJungle=chanceToGenerateInJungle;
-        for (int x = 0; x<map.getWidth(); x++)
-            for (int y = 0; y<map.getHeight(); y++)
+        for (int x = 0; x<map.getWidth()+1; x++)
+            for (int y = 0; y<map.getHeight()+1; y++)
                 add(new Vector2d(x,y));
 
     }
@@ -70,6 +70,6 @@ public class GrassGenerator implements MapChangeListener {
     }
 
     protected boolean isPreferred(Vector2d position) {
-        return position.getY() >= map.getHeight() - (int) (Math.ceil(mapJungleHeight/2)) && position.getY() < map.getHeight() + mapJungleHeight/2;
+        return position.getY() >= map.getHeight()/2 - mapJungleHeight && position.getY() < map.getHeight()/2 + mapJungleHeight;
     }
 }

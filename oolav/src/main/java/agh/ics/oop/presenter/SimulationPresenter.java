@@ -17,10 +17,15 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 
 public class SimulationPresenter implements MapChangeListener {
     WorldMap worldMap;
+    private ScheduledExecutorService executorService;
+    private int speedOfSimulation = 1;
     @FXML
     private Label moveDescriptionLabel;
     @FXML
@@ -138,7 +143,7 @@ public class SimulationPresenter implements MapChangeListener {
                     startingNumberOfAnimalsValue,startEnergyOfAnimalsValue,gnomesValue,maxEnergyValue,energyPerGrassEatenValue,
                     chanceToGenerateGrassInTheJungleValue,jungleHeightValue);
             Thread thread = new Thread(simulation);
-            thread.start();
+            start(thread);
         } catch (IOException e){
             e.printStackTrace();
         }
@@ -164,6 +169,25 @@ public class SimulationPresenter implements MapChangeListener {
             return Integer.parseInt(test.getText());
         } catch (Exception e) {
             throw new RuntimeException("put in Int");
+        }
+    }
+
+    private boolean isRunning(){
+        return executorService != null && !executorService.isShutdown();
+    }
+
+    public void start(Thread thread){
+        if (isRunning()) throw new RuntimeException("Simulation is already running");
+        executorService = Executors.newSingleThreadScheduledExecutor();
+        executorService.scheduleWithFixedDelay(thread,500/speedOfSimulation,
+                1000/speedOfSimulation, TimeUnit.MILLISECONDS);
+    }
+
+    public void setSpeedOfSimulation(int speed,Thread thread){
+        this.speedOfSimulation = speed;
+        if (isRunning()) {
+            executorService.shutdown();
+            thread.start();
         }
     }
 

@@ -10,7 +10,7 @@ public class GrassField extends AbstractWorldMap {
     private final Map<Vector2d, Set<Animal>> animals = new HashMap<>();
     final Vector2d topRightCorner;
     final Vector2d bottomLeftCorner = new Vector2d(0,0);
-    Map<Vector2d, Grass> grasses = new HashMap<>();
+    private final Map<Vector2d, Grass> grasses = new HashMap<>();
     private int emptySquares;
     private final GrassGenerator grassGenerator;
 
@@ -107,9 +107,9 @@ public class GrassField extends AbstractWorldMap {
 
     @Override
     public Optional<WorldElement> objectAt(Vector2d position) {
-        if (super.objectAt(position).isPresent()) {
-            return super.objectAt(position);
-        }
+//        if (super.objectAt(position).isPresent()) {
+//            return super.objectAt(position);
+//        }
         return Optional.of(grasses.get(position));
     }
 
@@ -144,6 +144,16 @@ public class GrassField extends AbstractWorldMap {
         return grasses.size();
     }
 
+    public int numberOfAnimals(){
+        return Math.toIntExact(animals.keySet().stream()
+                .filter(position -> !animals.get(position).isEmpty())
+                .count());
+    }
+
+    public int getEmptySquares(){
+        return emptySquares;
+    }
+
     public boolean grassAt(Vector2d position){
         return grasses.containsKey(position);
     }
@@ -153,9 +163,7 @@ public class GrassField extends AbstractWorldMap {
         return topRightCorner.getX() - bottomLeftCorner.getX();
     }
 
-    public int getEmptySquares(){
-        return emptySquares;
-    }
+
 
     public void generateGrass(int numberOfGrassToGenerate, int chanceToGenerateInTheJungle){
         for (int i = 0; i < numberOfGrassToGenerate; i++) {

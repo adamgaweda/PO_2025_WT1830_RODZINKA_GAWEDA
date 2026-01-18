@@ -4,10 +4,7 @@ import agh.ics.oop.model.*;
 import agh.ics.oop.model.util.IncorrectPositionException;
 import javafx.animation.AnimationTimer;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -20,8 +17,6 @@ public class Simulation extends AnimationTimer implements  Runnable {
     private final int numberOfGrassEachDayValue;
     int i =0;
     private int day = 0;
-    private ScheduledExecutorService executorService;
-    private int speedOfSimulation = 1;
     private final List<MapChangeListener> listeners = new ArrayList<>();
     private final int energyPerGrassEatenValue;
     private long FRAMES_PER_SECOND=50L;
@@ -60,24 +55,6 @@ public class Simulation extends AnimationTimer implements  Runnable {
         day++;
     }
 
-    private boolean isRunning(){
-        return executorService != null && !executorService.isShutdown();
-    }
-
-    public void start(){
-        if (isRunning()) throw new RuntimeException("Simulation is already running");
-        executorService = Executors.newSingleThreadScheduledExecutor();
-        executorService.scheduleWithFixedDelay(this,500/speedOfSimulation,
-                1000/speedOfSimulation, TimeUnit.MILLISECONDS);
-    }
-
-    public void setSpeedOfSimulation(int speed){
-        this.speedOfSimulation = speed;
-        if (isRunning()) {
-            executorService.shutdown();
-            start();
-        }
-    }
 
 
     @Override
@@ -114,8 +91,8 @@ public class Simulation extends AnimationTimer implements  Runnable {
             if (animalsOnGrass.isEmpty()){
                 continue;
             }
-            Animal animal = animalsOnGrass.stream().findFirst().get();
-            animal.changeEnergy(energyPerGrassEatenValue);
+            Animal animal = Collections.max(animalsOnGrass);
+            animal.eatGrass(energyPerGrassEatenValue);
             worldMap.remove(grass);
         }
     }

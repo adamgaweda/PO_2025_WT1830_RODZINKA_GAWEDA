@@ -118,13 +118,20 @@ public class Simulation extends AnimationTimer implements  Runnable {
     private void eatGrass(){
         List<Grass> grasses = worldMap.getGrasses();
         for (Grass grass : grasses){
+
             Set<Animal> animalsOnGrass = worldMap.getAnimalsAt(grass.getPosition());
             if (animalsOnGrass.isEmpty()){
                 continue;
             }
+            if(grass.isCandy()){
+                for(Animal animal : animalsOnGrass){
+                    animal.eatGrass(animal.getMaxEnergy());
+                }
+            }else{
             Animal animal = Collections.max(animalsOnGrass);
             animal.eatGrass(energyPerGrassEatenValue);
             worldMap.remove(grass);
+            }
         }
     }
 

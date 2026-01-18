@@ -20,6 +20,7 @@ public class GrassGenerator implements MapChangeListener {
         map.addObserver(this);
         mapJungleHeight=jungleHeight;
         mapJungleWidth=jungleWidth;
+        this.chanceToGenerateCandy=chanceToGenerateCandy;
         this.chanceToGenerateInJungle=chanceToGenerateInJungle;
         for (int x = 0; x<map.getWidth(); x++)
             for (int y = 0; y<map.getHeight(); y++)

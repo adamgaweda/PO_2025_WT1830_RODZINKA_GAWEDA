@@ -47,7 +47,7 @@ public class GrassField extends AbstractWorldMap {
         animals.get(vector2d).add(animal);
     }
 
-    public Animal move(Animal animal){
+    public void move(Animal animal){
         Vector2d vectorAnimal = animal.pos;
         MapDirection mapDirection = animal.getWhatGenCurrentlyOn();
         switch (mapDirection){
@@ -78,7 +78,6 @@ public class GrassField extends AbstractWorldMap {
         animals.remove(animal.pos);
         animal.pos = vectorAnimal;
         animal.changeEnergy(-energyLoss);
-        return animal;
     }
 
     public void place(Grass grass){

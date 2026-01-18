@@ -8,6 +8,7 @@ import java.util.*;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import static java.lang.Math.min;
 
 public class Simulation extends AnimationTimer implements  Runnable {
     List<Animal> animals = new ArrayList<Animal>();
@@ -23,13 +24,22 @@ public class Simulation extends AnimationTimer implements  Runnable {
     private long INTERVAL=10000000L / FRAMES_PER_SECOND;
     private long last = 0;
     private final GrassGenerator grassGenerator;
+    private final int energyRequiredToChargeValue;
+    private final int energyIntervalToChargeValue;
+    private final int maxChargeRangeValue;
+    private int energyLoss;
+
 
     public Simulation(GrassField map, int numberOfGrassAtTheStartValue, int numberOfGrassEachDayValue,
-                      int startingNumberOfAnimalsValue, int startEnergyOfAnimalsValue,int gnomesValue,int maxEnergyValue,
+                      int startingNumberOfAnimalsValue, int startEnergyOfAnimalsValue,int gnomesValue,int maxEnergyValue,int energyRequiredToChargeValue,int energyIntervalToChargeValue,int maxChargeRangeValue,
                       int energyPerGrassEatenValue, int chanceToGenerateGrassInTheJungle, int jungleHeightValue) {
         this.worldMap = map;
         this.numberOfGrassEachDayValue=numberOfGrassEachDayValue;
         this.energyPerGrassEatenValue=energyPerGrassEatenValue;
+        this.energyRequiredToChargeValue = energyRequiredToChargeValue;
+        this.energyIntervalToChargeValue = energyIntervalToChargeValue;
+        this.maxChargeRangeValue = maxChargeRangeValue;
+        this.energyLoss = map.getEnergyLoss();
         this.grassGenerator = new GrassGenerator(map,jungleHeightValue,map.getWidth(),chanceToGenerateGrassInTheJungle);
         if (numberOfGrassAtTheStartValue>map.getCurrentBounds().topRightEdgeOfTheMap().getY()*map.getCurrentBounds().topRightEdgeOfTheMap().getX()){
             throw new IllegalArgumentException("Initial number of grass greater then map size");
@@ -77,9 +87,31 @@ public class Simulation extends AnimationTimer implements  Runnable {
 
     private void moveAnimal(){
         for (Animal animal : animals){
-            Animal animal1 = worldMap.move(animal);
-            animal=animal1;
-            animals.set(animals.indexOf(animal), animal1);
+            int steps = animal.getEnergy();
+            // zamiast robić 2 zmienne, robię jedną która zmienia swoje zastosowanie
+            if(steps>=energyRequiredToChargeValue){
+                steps = min((steps-energyRequiredToChargeValue)/energyIntervalToChargeValue + 1,maxChargeRangeValue);
+                int tillCrash = energyLoss;
+                for(int i=0; i<steps;i++){
+                    if(worldMap.isAnimalAt(animal.getPosition().add(animal.getWhatGenCurrentlyOn().toUnitVector()))){
+                        animal.changeEnergy(-tillCrash);
+                    }else{
+                        tillCrash+=energyLoss;
+                        worldMap.move(animal);
+                        try{
+                            if(worldMap.isGrassAt(animal.getPosition())){
+                                worldMap.remove((Grass) worldMap.objectAt(animal.getPosition()).get());
+                            }
+                        }
+                        catch(Exception e){
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }
+            else{
+                worldMap.move(animal);
+            }
         }
     }
 

@@ -52,6 +52,12 @@ public class SimulationPresenter implements MapChangeListener {
     @FXML
     private TextField maxEnergy;
     @FXML
+    private TextField energyRequiredToCharge;
+    @FXML
+    private TextField energyIntervalToCharge;
+    @FXML
+    private TextField maxChargeRange;
+    @FXML
     private TextField energyRequiredToMate;
     @FXML
     private TextField energyLostDuringMating;
@@ -130,6 +136,9 @@ public class SimulationPresenter implements MapChangeListener {
         int startEnergyOfAnimalsValue = getValueFromTextField(startEnergyOfAnimals) < 0 ? defaultMapValue*defaultMapValue : getValueFromTextField(startEnergyOfAnimals);
         int lostEnergyAtTheEndOfTheDayValue = getValueFromTextField(lostEnergyAtTheEndOfTheDay) < 0 ? defaultEnergyValue : getValueFromTextField(lostEnergyAtTheEndOfTheDay);
         int maxEnergyValue = getValueFromTextField(maxEnergy) < 0 ? defaultMapValue*defaultMapValue : getValueFromTextField(maxEnergy);
+        int energyRequiredToChargeValue = getValueFromTextField(energyRequiredToCharge) < 0 ? defaultMapValue*defaultMapValue : getValueFromTextField(energyRequiredToCharge);
+        int energyIntervalToChargeValue = getValueFromTextField(energyIntervalToCharge) < 0 ? defaultMapValue*defaultMapValue : getValueFromTextField(energyIntervalToCharge);
+        int maxChargeRangeValue = getValueFromTextField(maxChargeRange) < 0 ? defaultMapValue*defaultMapValue : getValueFromTextField(maxChargeRange);
         int energyRequiredToMateValue = getValueFromTextField(energyRequiredToMate) < 0 ? defaultMapValue : getValueFromTextField(energyRequiredToMate);
         int energyLostDuringMatingValue = getValueFromTextField(energyLostDuringMating) < 0 ? defaultMapValue : getValueFromTextField(energyLostDuringMating);
         int mutationsInChildrenValue = getValueFromTextField(mutationsInChildren) < 0 ? defaultMapValue : getValueFromTextField(mutationsInChildren);
@@ -145,7 +154,8 @@ public class SimulationPresenter implements MapChangeListener {
             SimulationApp simulationApp = new SimulationApp();
             simulationApp.launchSimulationWindow(map);
             Simulation simulation = new Simulation(map,numberOfGrassAtTheStartValue,numberOfGrassEachDayValue,
-                    startingNumberOfAnimalsValue,startEnergyOfAnimalsValue,gnomesValue,maxEnergyValue,energyPerGrassEatenValue,
+                    startingNumberOfAnimalsValue,startEnergyOfAnimalsValue,gnomesValue,maxEnergyValue,energyRequiredToChargeValue,
+                    energyIntervalToChargeValue,maxChargeRangeValue,energyPerGrassEatenValue,
                     chanceToGenerateGrassInTheJungleValue,jungleHeightValue);
             this.thread = new Thread(simulation);
             clock = new Movement();

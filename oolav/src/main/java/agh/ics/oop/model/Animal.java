@@ -3,33 +3,31 @@ package agh.ics.oop.model;
 import agh.ics.oop.MapDirection;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
-public class Animal implements WorldElement {
+public class Animal implements WorldElement,Comparable<Animal>{
     MapDirection facing = MapDirection.North;
     Vector2d pos= new  Vector2d(0,0);
     int energy = 0;
     List<MapDirection> gen = new ArrayList<>();
-    int maxEnergy = 0;
+    final int maxEnergy;
     int whatGenCurrentlyOn = 0;
     Integer deathDay = null;
     int numberOfGrassEaten = 0;
     int numberOfChildren = 0;
-    int dayOfBirth;
+    int dayOfBirth = 0;
 
     public void defaultAnimal() {
         this.pos = new Vector2d(2,2);
     }
 
-    public Animal(Vector2d pos) {
-        this.pos = pos;
-    }
-
-    public Animal(Vector2d birthVector, int gnomesValue,int maxEnergyValue,int startEnergyOfAnimalsValue, int dayOfBirth){
+    public Animal(Vector2d birthVector, int gnomesValue,int maxEnergyValue,int startEnergyOfAnimalsValue,
+                  int dayOfBirth){
         this.pos = birthVector;
         this.facing = MapDirection.getRandom();
         generateGenes(gnomesValue);
-        setEnergy(maxEnergyValue);
+        this.maxEnergy=maxEnergyValue;
         setEnergy(startEnergyOfAnimalsValue);
         this.dayOfBirth=dayOfBirth;
     }
@@ -61,10 +59,6 @@ public class Animal implements WorldElement {
         return deathDay==null;
     }
 
-    public void increaseNumberOfGrassEaten(){
-        numberOfGrassEaten++;
-    }
-
     public int getNumberOfGrassEaten(){
         return numberOfGrassEaten;
     }
@@ -84,17 +78,11 @@ public class Animal implements WorldElement {
     }
 
     public void setEnergy(int energy){
-        this.energy=energy;
-        if (this.energy> maxEnergy){
-            maxEnergy = this.energy;
-        }
+        this.energy = Math.min(energy,maxEnergy);
     }
 
     public void changeEnergy(int energy){
-        this.energy+=energy;
-        if (this.energy> maxEnergy){
-            maxEnergy = this.energy;
-        }
+        this.energy = Math.min(this.energy+energy,maxEnergy);
     }
 
     public int getMaxEnergy(){
@@ -118,5 +106,14 @@ public class Animal implements WorldElement {
         for (int i = 0; i<numberOfGenes;i++){
             gen.add(MapDirection.getRandom());
         }
+    }
+
+    @Override
+    public int compareTo(Animal otherAnimal) {
+        return Comparator.comparingInt((Animal animal) -> animal.energy)
+                .thenComparingInt(Animal::getLiveSpan)
+                .thenComparingInt(Animal::getNumberOfChildren)
+//                .thenComparingInt(Animal::getMaxEnergy)
+                .compare(this,otherAnimal);
     }
 }

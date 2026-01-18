@@ -51,6 +51,12 @@ public class SimulationPresenter implements MapChangeListener {
     @FXML
     private TextField maxEnergy;
     @FXML
+    private TextField energyRequiredToCharge;
+    @FXML
+    private TextField energyIntervalToCharge;
+    @FXML
+    private TextField maxChargeRange;
+    @FXML
     private TextField energyRequiredToMate;
     @FXML
     private TextField energyLostDuringMating;
@@ -129,13 +135,16 @@ public class SimulationPresenter implements MapChangeListener {
         int startEnergyOfAnimalsValue = getValueFromTextField(startEnergyOfAnimals) < 0 ? defaultMapValue*defaultMapValue : getValueFromTextField(startEnergyOfAnimals);
         int lostEnergyAtTheEndOfTheDayValue = getValueFromTextField(lostEnergyAtTheEndOfTheDay) < 0 ? defaultEnergyValue : getValueFromTextField(lostEnergyAtTheEndOfTheDay);
         int maxEnergyValue = getValueFromTextField(maxEnergy) < 0 ? defaultMapValue*defaultMapValue : getValueFromTextField(maxEnergy);
+        int energyRequiredToChargeValue = getValueFromTextField(energyRequiredToCharge) < 0 ? defaultMapValue*defaultMapValue : getValueFromTextField(energyRequiredToCharge);
+        int energyIntervalToChargeValue = getValueFromTextField(energyIntervalToCharge) < 0 ? defaultMapValue*defaultMapValue : getValueFromTextField(energyIntervalToCharge);
+        int maxChargeRangeValue = getValueFromTextField(maxChargeRange) < 0 ? defaultMapValue*defaultMapValue : getValueFromTextField(maxChargeRange);
         int energyRequiredToMateValue = getValueFromTextField(energyRequiredToMate) < 0 ? defaultMapValue : getValueFromTextField(energyRequiredToMate);
         int energyLostDuringMatingValue = getValueFromTextField(energyLostDuringMating) < 0 ? defaultMapValue : getValueFromTextField(energyLostDuringMating);
         int mutationsInChildrenValue = getValueFromTextField(mutationsInChildren) < 0 ? defaultMapValue : getValueFromTextField(mutationsInChildren);
         int gnomesValue = getValueFromTextField(gnomes) < 0 ? defaultMapValue : getValueFromTextField(gnomes);
         int chanceToGenerateGrassInTheJungleValue = getValueFromTextField(chanceToGenerateGrassInTheJungle) < 0 ? 80 : getValueFromTextField(chanceToGenerateGrassInTheJungle);
         int jungleHeightValue = getValueFromTextField(jungleHeight) < 0 ? (int) (defaultMapValue * 0.2) : getValueFromTextField(jungleHeight);
-        GrassField map = new GrassField(width,height,chanceToGenerateGrassInTheJungleValue);
+        GrassField map = new GrassField(width,height,chanceToGenerateGrassInTheJungleValue,lostEnergyAtTheEndOfTheDayValue);
         map.generateGrass(numberOfGrassAtTheStartValue,chanceToGenerateGrassInTheJungleValue);
         map.addObserver((worldMap, message, vector2d) -> {
             String timeOfDay = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy hh-mm-ss"));
@@ -145,7 +154,7 @@ public class SimulationPresenter implements MapChangeListener {
             SimulationApp simulationApp = new SimulationApp();
             simulationApp.launchSimulationWindow(map);
             Simulation simulation = new Simulation(map,numberOfGrassAtTheStartValue,numberOfGrassEachDayValue,
-                    startingNumberOfAnimalsValue,startEnergyOfAnimalsValue,gnomesValue,maxEnergyValue,energyPerGrassEatenValue,
+                    startingNumberOfAnimalsValue,startEnergyOfAnimalsValue,gnomesValue,maxEnergyValue,energyRequiredToChargeValue,energyIntervalToChargeValue,maxChargeRangeValue,energyPerGrassEatenValue,
                     chanceToGenerateGrassInTheJungleValue,jungleHeightValue);
             Thread thread = new Thread(simulation);
             start(thread);

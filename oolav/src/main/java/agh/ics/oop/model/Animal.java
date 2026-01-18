@@ -8,7 +8,7 @@ import java.util.List;
 
 public class Animal implements WorldElement,Comparable<Animal>{
     MapDirection facing = MapDirection.North;
-    Vector2d pos= new  Vector2d(0,0);
+    Vector2d pos;
     int energy = 0;
     List<MapDirection> gen = new ArrayList<>();
     final int maxEnergy;
@@ -17,10 +17,6 @@ public class Animal implements WorldElement,Comparable<Animal>{
     int numberOfGrassEaten = 0;
     int numberOfChildren = 0;
     int dayOfBirth = 0;
-
-    public void defaultAnimal() {
-        this.pos = new Vector2d(2,2);
-    }
 
     public Animal(Vector2d birthVector, int gnomesValue,int maxEnergyValue,int startEnergyOfAnimalsValue,
                   int dayOfBirth){

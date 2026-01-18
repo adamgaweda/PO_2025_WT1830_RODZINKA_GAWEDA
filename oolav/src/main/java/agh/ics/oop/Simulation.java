@@ -9,6 +9,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import static java.lang.Math.min;
+
 public class Simulation extends AnimationTimer implements  Runnable {
     List<Animal> animals = new ArrayList<Animal>();
     List<Animal> deadAnimals = new ArrayList<>();
@@ -24,13 +26,21 @@ public class Simulation extends AnimationTimer implements  Runnable {
     private long last = 0;
     private final int chanceToGenerateGrassInTheJungle;
     private final GrassGenerator grassGenerator;
+    private final int energyRequiredToChargeValue;
+    private final int energyIntervalToChargeValue;
+    private final int maxChargeRangeValue;
+    private int energyLoss;
 
     public Simulation(GrassField map, int numberOfGrassAtTheStartValue, int numberOfGrassEachDayValue,
-                      int startingNumberOfAnimalsValue, int startEnergyOfAnimalsValue,int gnomesValue,int maxEnergyValue,
+                      int startingNumberOfAnimalsValue, int startEnergyOfAnimalsValue,int gnomesValue,int maxEnergyValue,int energyRequiredToChargeValue,int energyIntervalToChargeValue,int maxChargeRangeValue,
                       int energyPerGrassEatenValue, int chanceToGenerateGrassInTheJungle, int jungleHeightValue) {
         this.worldMap = map;
         this.numberOfGrassEachDayValue=numberOfGrassEachDayValue;
         this.energyPerGrassEatenValue=energyPerGrassEatenValue;
+        this.energyRequiredToChargeValue = energyRequiredToChargeValue;
+        this.energyIntervalToChargeValue = energyIntervalToChargeValue;
+        this.maxChargeRangeValue = maxChargeRangeValue;
+        this.energyLoss = map.getEnergyLoss();
         this.chanceToGenerateGrassInTheJungle=chanceToGenerateGrassInTheJungle;
         this.grassGenerator = new GrassGenerator(map,jungleHeightValue,map.getWidth(),chanceToGenerateGrassInTheJungle);
         if (numberOfGrassAtTheStartValue>map.getCurrentBounds().topRightEdgeOfTheMap().getY()*map.getCurrentBounds().topRightEdgeOfTheMap().getX()){
@@ -78,9 +88,31 @@ public class Simulation extends AnimationTimer implements  Runnable {
 
     private void moveAnimal(){
         for (Animal animal : animals){
-            Animal animal1 = worldMap.move(animal);
-            animal=animal1;
-            animals.set(animals.indexOf(animal), animal1);
+            int steps = animal.getEnergy();
+            // zamiast robić 2 zmienne, robię jedną która zmienia swoje zastosowanie
+            if(steps>=energyRequiredToChargeValue){
+                steps = min((steps-energyRequiredToChargeValue)/energyIntervalToChargeValue + 1,maxChargeRangeValue);
+                int tillCrash = energyLoss;
+                for(int i=0; i<steps;i++){
+                    if(worldMap.isAnimalAt(animal.getPosition().add(animal.getWhatGenCurrentlyOn().toUnitVector()))){
+                        animal.changeEnergy(-tillCrash);
+                    }else{
+                        tillCrash+=energyLoss;
+                        worldMap.move(animal);
+                        try{
+                            if(worldMap.grassAt(animal.getPosition())){
+                                worldMap.remove((Grass) worldMap.objectAt(animal.getPosition()).get());
+                            }
+                        }
+                        catch(Exception e){
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }
+            else{
+                worldMap.move(animal);
+            }
         }
     }
 
@@ -102,7 +134,7 @@ public class Simulation extends AnimationTimer implements  Runnable {
     }
 
     private void generateGrass(){
-        int toGenerate = Math.min(numberOfGrassEachDayValue,worldMap.getWidth()* worldMap.getHeight() - worldMap.numberOfGrasses());
+        int toGenerate = min(numberOfGrassEachDayValue,worldMap.getWidth()* worldMap.getHeight() - worldMap.numberOfGrasses());
         for (int i = 0; i < toGenerate; i++)
             worldMap.place(grassGenerator.generateGrass());
     }

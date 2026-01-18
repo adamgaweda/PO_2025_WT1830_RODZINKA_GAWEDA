@@ -14,13 +14,15 @@ public class GrassField extends AbstractWorldMap {
     private int emptySquares;
     private final GrassGenerator grassGenerator;
 
-    public GrassField(int width,int height, int chanceToGenerateInJungle) {
+
+    public GrassField(int width,int height, int chanceToGenerateInJungle, int energyLoss) {
         if (width< 1 || height < 1){
             throw new IllegalArgumentException("Map dimensions must be positive");
         }
         topRightCorner = new Vector2d(width,height);
         final UUID uuid = UUID.randomUUID();
         this.emptySquares=width*height;
+        this.energyLoss=energyLoss;
         this.grassGenerator = new GrassGenerator(this, getHeight(),getWidth(), chanceToGenerateInJungle);
     }
 
@@ -48,7 +50,7 @@ public class GrassField extends AbstractWorldMap {
         notifyMapChanged("Animal placed at: " + animal.getPosition(), animal.getPosition());
     }
 
-    public Animal move(Animal animal){
+    public void move(Animal animal){
         Vector2d vectorAnimal = animal.pos;
         MapDirection mapDirection = animal.getWhatGenCurrentlyOn();
         switch (mapDirection){
@@ -61,7 +63,7 @@ public class GrassField extends AbstractWorldMap {
             case West -> animal.facing = animal.facing.turnIntTimes(6);
             case NorthWest -> animal.facing = animal.facing.turnIntTimes(7);
         }
-        animal.pos.add(animal.facing.toUnitVector());
+        vectorAnimal=animal.pos.add(animal.facing.toUnitVector());
         if (vectorAnimal.getX()>topRightCorner.getX()){
             vectorAnimal= new Vector2d(0,vectorAnimal.getY());
         }
@@ -79,7 +81,6 @@ public class GrassField extends AbstractWorldMap {
         animals.remove(animal.pos);
         animal.pos = vectorAnimal;
         animal.changeEnergy(-energyLoss);
-        return animal;
     }
 
     public void place(Grass grass){

@@ -22,9 +22,6 @@
             <TextField fx:id="startEnergyOfAnimals" promptText="How much energy should the animals spawn in with"/>
             <TextField fx:id="lostEnergyAtTheEndOfTheDay" promptText="How much energy should the animals lose each day"/>
             <TextField fx:id="maxEnergy" promptText="What is the animals max energy"/>
-            <TextField fx:id="energyRequiredToCharge" promptText="How much energy should animal have to charge"/>
-            <TextField fx:id="energyIntervalToCharge" promptText="How much energy to extend a charge range"/>
-            <TextField fx:id="maxChargeRange" promptText="How long can animal charge"/>
             <TextField fx:id="energyRequiredToMate" promptText="How much energy should both animals have to start mating"/>
             <TextField fx:id="energyLostDuringMating" promptText="How much energy should the animals lose while mating"/>
             <TextField fx:id="mutationsInChildren" promptText="How many mutations should occur in children"/>

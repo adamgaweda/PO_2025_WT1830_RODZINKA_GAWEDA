@@ -4,6 +4,7 @@ import agh.ics.oop.OptionsParser;
 import agh.ics.oop.Simulation;
 import agh.ics.oop.SimulationApp;
 import agh.ics.oop.model.*;
+import javafx.animation.AnimationTimer;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.geometry.HPos;
@@ -24,8 +25,8 @@ import java.util.concurrent.TimeUnit;
 
 public class SimulationPresenter implements MapChangeListener {
     WorldMap worldMap;
-    private ScheduledExecutorService executorService;
-    private int speedOfSimulation = 1;
+    Thread thread;
+    private Movement clock;
     @FXML
     private Label moveDescriptionLabel;
     @FXML
@@ -96,7 +97,7 @@ public class SimulationPresenter implements MapChangeListener {
             GridPane.setHalignment(label, HPos.CENTER);
         }
 
-        for (int i = 0; i<width; i++){
+        for (int i = 0; i<width +1; i++){
             for (int j = height; j > -1; j--){
                 Vector2d postion = new Vector2d(i + bottomLeftEdgeOfTheMap.getX(), topRightEdgeOfTheMap.getY()-j);
                 if (worldMap.isOccupied(postion)){
@@ -136,7 +137,6 @@ public class SimulationPresenter implements MapChangeListener {
         int chanceToGenerateGrassInTheJungleValue = getValueFromTextField(chanceToGenerateGrassInTheJungle) < 0 ? 80 : getValueFromTextField(chanceToGenerateGrassInTheJungle);
         int jungleHeightValue = getValueFromTextField(jungleHeight) < 0 ? (int) (defaultMapValue * 0.2) : getValueFromTextField(jungleHeight);
         GrassField map = new GrassField(width,height,chanceToGenerateGrassInTheJungleValue);
-        map.generateGrass(numberOfGrassAtTheStartValue,chanceToGenerateGrassInTheJungleValue);
         map.addObserver((worldMap, message, vector2d) -> {
             String timeOfDay = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy hh-mm-ss"));
             System.out.printf("%s %s%n", timeOfDay, message);
@@ -147,13 +147,19 @@ public class SimulationPresenter implements MapChangeListener {
             Simulation simulation = new Simulation(map,numberOfGrassAtTheStartValue,numberOfGrassEachDayValue,
                     startingNumberOfAnimalsValue,startEnergyOfAnimalsValue,gnomesValue,maxEnergyValue,energyPerGrassEatenValue,
                     chanceToGenerateGrassInTheJungleValue,jungleHeightValue);
-            Thread thread = new Thread(simulation);
-            start(thread);
+            this.thread = new Thread(simulation);
+            clock = new Movement();
+            clock.start();
         } catch (IOException e){
             e.printStackTrace();
         }
 
     }
+
+    public void step(){
+        thread.run();
+    }
+
     private void clearGrid() {
         mapGrid.getChildren().retainAll(mapGrid.getChildren().getFirst());
         mapGrid.getColumnConstraints().clear();
@@ -177,24 +183,38 @@ public class SimulationPresenter implements MapChangeListener {
         }
     }
 
-    private boolean isRunning(){
-        return executorService != null && !executorService.isShutdown();
-    }
+    private class Movement extends AnimationTimer{
 
-    public void start(Thread thread){
-        if (isRunning()) throw new RuntimeException("Simulation is already running");
-        executorService = Executors.newSingleThreadScheduledExecutor();
-        executorService.scheduleWithFixedDelay(thread,500/speedOfSimulation,
-                1000/speedOfSimulation, TimeUnit.MILLISECONDS);
-    }
-
-    public void setSpeedOfSimulation(int speed,Thread thread){
-        this.speedOfSimulation = speed;
-        if (isRunning()) {
-            executorService.shutdown();
-            thread.start();
+        private long framesPerSecond = 5L;
+        private long interval = 1000000000L / framesPerSecond;
+        private long last = 0;
+        @Override
+        public void handle(long now){
+            if (now - last > interval){
+                step();
+                last = now;
+            }
         }
     }
+
+//    private boolean isRunning(){
+//        return executorService != null && !executorService.isShutdown();
+//    }
+//
+//    public void start(Thread thread){
+//        if (isRunning()) throw new RuntimeException("Simulation is already running");
+//        executorService = Executors.newSingleThreadScheduledExecutor();
+//        executorService.scheduleWithFixedDelay(thread,500/speedOfSimulation,
+//                1000/speedOfSimulation, TimeUnit.MILLISECONDS);
+//    }
+//
+//    public void setSpeedOfSimulation(int speed,Thread thread){
+//        this.speedOfSimulation = speed;
+//        if (isRunning()) {
+//            executorService.shutdown();
+//            thread.start();
+//        }
+//    }
 
 
 }

@@ -20,7 +20,7 @@ public class GrassGenerator implements MapChangeListener {
         mapJungleHeight=jungleHeight;
         mapJungleWidth=jungleWidth;
         this.chanceToGenerateInJungle=chanceToGenerateInJungle;
-        for (int x = 0; x<map.getWidth()+1; x++)
+        for (int x = 0; x<map.getWidth()+2; x++)
             for (int y = 0; y<map.getHeight()+1; y++)
                 add(new Vector2d(x,y));
 

@@ -24,7 +24,7 @@ public class Animal implements WorldElement,Comparable<Animal>{
 
     public Animal(Vector2d birthVector, int gnomesValue,int maxEnergyValue,int startEnergyOfAnimalsValue,
                   int dayOfBirth){
-        this.pos = birthVector;
+        this.pos = birthVector.randomVectorWithinGivenVector();
         this.facing = MapDirection.getRandom();
         generateGenes(gnomesValue);
         this.maxEnergy=maxEnergyValue;
@@ -48,6 +48,9 @@ public class Animal implements WorldElement,Comparable<Animal>{
     }
 
     public int getLiveSpan(){
+        if (deathDay == null){
+            return -dayOfBirth;
+        }
         return deathDay-dayOfBirth;
     }
 

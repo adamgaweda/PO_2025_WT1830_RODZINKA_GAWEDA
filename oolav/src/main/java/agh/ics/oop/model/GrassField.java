@@ -61,7 +61,7 @@ public class GrassField extends AbstractWorldMap {
             case West -> animal.facing = animal.facing.turnIntTimes(6);
             case NorthWest -> animal.facing = animal.facing.turnIntTimes(7);
         }
-        animal.pos.add(animal.facing.toUnitVector());
+        animal.pos = animal.pos.add(animal.facing.toUnitVector());
         if (vectorAnimal.getX()>topRightCorner.getX()){
             vectorAnimal= new Vector2d(0,vectorAnimal.getY());
         }

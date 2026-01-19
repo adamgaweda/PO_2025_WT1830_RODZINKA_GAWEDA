@@ -16,6 +16,7 @@ import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -96,42 +97,55 @@ public class SimulationPresenter implements MapChangeListener {
         Vector2d topRightEdgeOfTheMap = bounds.topRightEdgeOfTheMap();
         Vector2d bottomLeftEdgeOfTheMap = bounds.bottomLeftEdgeOfTheMap();
 
-        int width = topRightEdgeOfTheMap.getX()-bottomLeftEdgeOfTheMap.getX();
-        int height = topRightEdgeOfTheMap.getY()- bottomLeftEdgeOfTheMap.getY();
+        int width = topRightEdgeOfTheMap.getX()-bottomLeftEdgeOfTheMap.getX() +1;
+        int height = topRightEdgeOfTheMap.getY()- bottomLeftEdgeOfTheMap.getY() +1;
+        double canvasHeight=mapCanvas.getHeight();
+        double canvasWidht=mapCanvas.getWidth();
         gc.setFill(Color.BURLYWOOD);
         gc.fillRect(0,0,mapCanvas.getWidth(),mapCanvas.getHeight());
-        gc.setStroke(Color.BROWN);
+        double margin=20;
+        double cellWidth=(canvasWidht-margin)/width;
+        double cellHeight=(canvasHeight-margin)/height;
 
+        gc.setFill(Color.BLACK);
+        gc.setFont(Font.font(10));
+        for (int i = 0; i<width+1;i++){
+            String value=String.valueOf(i+bottomLeftEdgeOfTheMap.getX());
+            double x= margin + i*cellWidth + cellWidth/2;
+            double y= margin*0.75;
+            gc.fillText(value,x,y);
+        }
+        for (int i = 0; i<height+1;i++){
+            String value=String.valueOf(i+bottomLeftEdgeOfTheMap.getY());
+            double x=margin*0.25;
+            double y= margin + i*cellHeight + cellHeight/2;
+            gc.fillText(value,x,y);
+        }
+        gc.setStroke(Color.BLACK);
+        for(int i=0; i<width;i++){
+            double x = margin + i*cellWidth;
+            gc.strokeLine(x,margin,x,canvasHeight);
+        }
+        for(int i=0; i<height;i++){
+            double y = margin + i*cellHeight;
+            gc.strokeLine(margin,y,canvasWidht,y);
+        }
 
-//        for (int i = 0; i<width+1;i++){
-//            mapGrid.getColumnConstraints().add(new ColumnConstraints(CELL_WIDTH));
-//            Label label = new Label(Integer.toString(i + bottomLeftEdgeOfTheMap.getX()));
-//            mapGrid.add(label, i+1 , 0);
-//            GridPane.setHalignment(label, HPos.CENTER);
-//        }
-
-//        for (int i = 0; i<height+1;i++){
-//            mapGrid.getRowConstraints().add(new RowConstraints(CELL_HIGHT));
-//            Label label = new Label(Integer.toString(topRightEdgeOfTheMap.getY()-i));
-//            mapGrid.add(label, 0 , i+1);
-//            GridPane.setHalignment(label, HPos.CENTER);
-//        }
-//
-//        for (int i = 0; i<width +1; i++){
-//            for (int j = height; j > -1; j--){
-//                Vector2d postion = new Vector2d(i + bottomLeftEdgeOfTheMap.getX(), topRightEdgeOfTheMap.getY()-j);
-//                if (worldMap.isOccupied(postion)){
-//                    Optional<WorldElement> optElement = worldMap.objectAt(postion);
-//                    final int  col = i+1;
+        for (int i = 0; i<width +1; i++){
+            for (int j = height; j > -1; j--){
+                Vector2d position = new Vector2d(i + bottomLeftEdgeOfTheMap.getX(), topRightEdgeOfTheMap.getY()-j);
+//                if(worldMap.isOccupied()
+//                if (worldMap.isOccupied(position)){
+//                    Optional<WorldElement> optElement = worldMap.objectAt(position);
+//                    final int col = i+1;
 //                    final int row = j+1;
 //                    optElement.ifPresent(element -> {
 //                        WorldElementBox box = new WorldElementBox(element);
-//                        mapGrid.add(box, col, row);
-//                        GridPane.setHalignment(box, HPos.CENTER);
+//
 //                    });
 //                }
-//            }
-//        }
+            }
+        }
 //        mapGrid.getColumnConstraints().add(new ColumnConstraints(CELL_HIGHT));
 //        mapGrid.getRowConstraints().add(new RowConstraints(CELL_WIDTH));
 //        Label label = new Label("y\\x");

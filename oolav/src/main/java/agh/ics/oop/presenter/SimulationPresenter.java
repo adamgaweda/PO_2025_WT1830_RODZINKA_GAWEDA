@@ -8,11 +8,14 @@ import javafx.animation.AnimationTimer;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.geometry.HPos;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Label;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
+import javafx.scene.paint.Color;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -30,7 +33,7 @@ public class SimulationPresenter implements MapChangeListener {
     @FXML
     private Label moveDescriptionLabel;
     @FXML
-    private GridPane mapGrid;
+    private Canvas mapCanvas;
     @FXML
     private TextField mapWidth;
     @FXML
@@ -70,6 +73,13 @@ public class SimulationPresenter implements MapChangeListener {
     @FXML
     private TextField framesPerSecond;
 
+    private GraphicsContext gc;
+
+    @FXML
+    private void initialize(){
+        gc=mapCanvas.getGraphicsContext2D();
+    }
+
     private final int defaultMapValue = 8;
     private final int defaultEnergyValue = 1;
 
@@ -81,48 +91,52 @@ public class SimulationPresenter implements MapChangeListener {
     }
 
     public void drawMap(){
-        clearGrid();
+
         Boundary bounds = worldMap.getCurrentBounds();
         Vector2d topRightEdgeOfTheMap = bounds.topRightEdgeOfTheMap();
         Vector2d bottomLeftEdgeOfTheMap = bounds.bottomLeftEdgeOfTheMap();
 
         int width = topRightEdgeOfTheMap.getX()-bottomLeftEdgeOfTheMap.getX();
         int height = topRightEdgeOfTheMap.getY()- bottomLeftEdgeOfTheMap.getY();
+        gc.setFill(Color.BURLYWOOD);
+        gc.fillRect(0,0,mapCanvas.getWidth(),mapCanvas.getHeight());
+        gc.setStroke(Color.BROWN);
 
-        for (int i = 0; i<width+1;i++){
-            mapGrid.getColumnConstraints().add(new ColumnConstraints(CELL_WIDTH));
-            Label label = new Label(Integer.toString(i + bottomLeftEdgeOfTheMap.getX()));
-            mapGrid.add(label, i+1 , 0);
-            GridPane.setHalignment(label, HPos.CENTER);
-        }
 
-        for (int i = 0; i<height+1;i++){
-            mapGrid.getRowConstraints().add(new RowConstraints(CELL_HIGHT));
-            Label label = new Label(Integer.toString(topRightEdgeOfTheMap.getY()-i));
-            mapGrid.add(label, 0 , i+1);
-            GridPane.setHalignment(label, HPos.CENTER);
-        }
+//        for (int i = 0; i<width+1;i++){
+//            mapGrid.getColumnConstraints().add(new ColumnConstraints(CELL_WIDTH));
+//            Label label = new Label(Integer.toString(i + bottomLeftEdgeOfTheMap.getX()));
+//            mapGrid.add(label, i+1 , 0);
+//            GridPane.setHalignment(label, HPos.CENTER);
+//        }
 
-        for (int i = 0; i<width +1; i++){
-            for (int j = height; j > -1; j--){
-                Vector2d postion = new Vector2d(i + bottomLeftEdgeOfTheMap.getX(), topRightEdgeOfTheMap.getY()-j);
-                if (worldMap.isOccupied(postion)){
-                    Optional<WorldElement> optElement = worldMap.objectAt(postion);
-                    final int  col = i+1;
-                    final int row = j+1;
-                    optElement.ifPresent(element -> {
-                        WorldElementBox box = new WorldElementBox(element);
-                        mapGrid.add(box, col, row);
-                        GridPane.setHalignment(box, HPos.CENTER);
-                    });
-                }
-            }
-        }
-        mapGrid.getColumnConstraints().add(new ColumnConstraints(CELL_HIGHT));
-        mapGrid.getRowConstraints().add(new RowConstraints(CELL_WIDTH));
-        Label label = new Label("y\\x");
-        mapGrid.add(label, 0, 0);
-        GridPane.setHalignment(label, HPos.CENTER);
+//        for (int i = 0; i<height+1;i++){
+//            mapGrid.getRowConstraints().add(new RowConstraints(CELL_HIGHT));
+//            Label label = new Label(Integer.toString(topRightEdgeOfTheMap.getY()-i));
+//            mapGrid.add(label, 0 , i+1);
+//            GridPane.setHalignment(label, HPos.CENTER);
+//        }
+//
+//        for (int i = 0; i<width +1; i++){
+//            for (int j = height; j > -1; j--){
+//                Vector2d postion = new Vector2d(i + bottomLeftEdgeOfTheMap.getX(), topRightEdgeOfTheMap.getY()-j);
+//                if (worldMap.isOccupied(postion)){
+//                    Optional<WorldElement> optElement = worldMap.objectAt(postion);
+//                    final int  col = i+1;
+//                    final int row = j+1;
+//                    optElement.ifPresent(element -> {
+//                        WorldElementBox box = new WorldElementBox(element);
+//                        mapGrid.add(box, col, row);
+//                        GridPane.setHalignment(box, HPos.CENTER);
+//                    });
+//                }
+//            }
+//        }
+//        mapGrid.getColumnConstraints().add(new ColumnConstraints(CELL_HIGHT));
+//        mapGrid.getRowConstraints().add(new RowConstraints(CELL_WIDTH));
+//        Label label = new Label("y\\x");
+//        mapGrid.add(label, 0, 0);
+//        GridPane.setHalignment(label, HPos.CENTER);
     }
 
     @FXML
@@ -180,9 +194,9 @@ public class SimulationPresenter implements MapChangeListener {
     }
 
     private void clearGrid() {
-        mapGrid.getChildren().retainAll(mapGrid.getChildren().getFirst());
-        mapGrid.getColumnConstraints().clear();
-        mapGrid.getRowConstraints().clear();
+//        mapGrid.getChildren().retainAll(mapGrid.getChildren().getFirst());
+//        mapGrid.getColumnConstraints().clear();
+//        mapGrid.getRowConstraints().clear();
     }
 
     @Override

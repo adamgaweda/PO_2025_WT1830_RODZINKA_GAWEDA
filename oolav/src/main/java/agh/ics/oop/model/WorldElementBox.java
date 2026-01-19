@@ -11,22 +11,18 @@ import java.util.HashMap;
 import java.util.Map;
 
 
-public class WorldElementBox extends VBox {
+public class WorldElementBox{
     private static final int imageSize = 20;
     private static Map<String,Image> imageCache = new HashMap<String,Image>();
+    private final WorldElement element;
+    private Image image;
 
 
     public WorldElementBox(WorldElement element) {
+        this.element = element;
         String imageName= element.getImage();
-        Image image = getFromCache(imageName);
-        ImageView imageView = new ImageView(image);
-        imageView.setFitWidth(imageSize);
-        imageView.setFitHeight(imageSize);
-        imageView.setPreserveRatio(true);
-        Label label = new Label (element.toString());
+        this.image = getFromCache(imageName);
 
-        setAlignment(Pos.CENTER);
-        getChildren().addAll(imageView,label);
     }
 
     private Image getFromCache(String name){

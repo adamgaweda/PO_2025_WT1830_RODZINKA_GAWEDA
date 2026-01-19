@@ -26,14 +26,24 @@ public class GrassField extends AbstractWorldMap {
 
     public void remove(Animal animal){
         Vector2d vector2d = animal.getPosition();
-        if (!animals.containsKey(vector2d) || animals.get(vector2d).contains(animal)){
+        if (!animals.containsKey(vector2d) || !animals.get(vector2d).contains(animal)){
             throw new IllegalArgumentException("This animal is not present at " + vector2d);
         }
         animals.get(vector2d).remove(animal);
         if (animals.get(vector2d).isEmpty() && !grasses.containsKey(vector2d)){
             emptySquares++;
         }
+    }
 
+    public void removeDeadAnimals(){
+        List<Animal> aaaaanimal = animals.values().stream()
+                .flatMap(Set::stream)
+                .toList();
+        for (Animal animal : aaaaanimal){
+            if (animal.getEnergy()<0){
+                remove(animal);
+            }
+        }
     }
 
     @Override
@@ -76,9 +86,10 @@ public class GrassField extends AbstractWorldMap {
             animal.facing = animal.facing.turnAround();
         }
         animals.remove(animal.pos);
-        animal.pos = vectorAnimal;
+        animal.setPos(vectorAnimal);
         animal.nextGen();
         animal.changeEnergy(-energyLoss);
+        place(animal);
     }
 
     public void place(Grass grass){
@@ -151,9 +162,7 @@ public class GrassField extends AbstractWorldMap {
     }
 
     public int numberOfAnimals(){
-        return Math.toIntExact(animals.keySet().stream()
-                .filter(position -> !animals.get(position).isEmpty())
-                .count());
+        return animals.values().stream().mapToInt(Set::size).sum();
     }
 
     public int getEmptySquares(){

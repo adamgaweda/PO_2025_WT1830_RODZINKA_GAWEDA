@@ -37,7 +37,7 @@ public class Simulation extends AnimationTimer implements  Runnable {
 
     public Simulation(GrassField map, int numberOfGrassAtTheStartValue, int numberOfGrassEachDayValue,
                       int startingNumberOfAnimalsValue, int startEnergyOfAnimalsValue,int gnomesValue,int maxEnergyValue,int energyRequiredToChargeValue,int energyIntervalToChargeValue,int maxChargeRangeValue,
-                      int energyPerGrassEatenValue, int chanceToGenerateGrassInTheJungle, int jungleHeightValue,int chanceToGenerateCandy,int energyRequiredToMateValue,int energyLostDuringMatingValue,int mutationsInChildrenValue) {
+                      int energyPerGrassEatenValue, int chanceToGenerateGrassInTheJungle, int jungleHeightValue,int energyRequiredToMateValue,int energyLostDuringMatingValue,int mutationsInChildrenValue) {
         this.worldMap = map;
         this.numberOfGrassEachDayValue=numberOfGrassEachDayValue;
         this.energyPerGrassEatenValue=energyPerGrassEatenValue;
@@ -50,7 +50,7 @@ public class Simulation extends AnimationTimer implements  Runnable {
         this.energyLostDuringMateValue = energyLostDuringMatingValue;
         this.mutationsInChildrenValue = mutationsInChildrenValue;
         this.maxEnergyValue = maxEnergyValue;
-        this.grassGenerator = new GrassGenerator(map,jungleHeightValue,map.getWidth(),chanceToGenerateGrassInTheJungle,chanceToGenerateCandy);
+        this.grassGenerator = new GrassGenerator(map,jungleHeightValue,map.getWidth(),chanceToGenerateGrassInTheJungle);
         if (numberOfGrassAtTheStartValue>map.getCurrentBounds().topRightEdgeOfTheMap().getY()*map.getCurrentBounds().topRightEdgeOfTheMap().getX()){
             throw new IllegalArgumentException("Initial number of grass greater then map size");
         }
@@ -133,15 +133,11 @@ public class Simulation extends AnimationTimer implements  Runnable {
             if (animalsOnGrass.isEmpty()){
                 continue;
             }
-            if(grass.isCandy()){
-                for(Animal animal : animalsOnGrass){
-                    animal.eatGrass(animal.getMaxEnergy());
-                }
-            }else{
+
             Animal animal = Collections.max(animalsOnGrass);
             animal.eatGrass(energyPerGrassEatenValue);
             worldMap.remove(grass);
-            }
+
         }
     }
 

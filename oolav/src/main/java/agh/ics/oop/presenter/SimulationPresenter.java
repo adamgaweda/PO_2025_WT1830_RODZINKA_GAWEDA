@@ -30,8 +30,6 @@ public class SimulationPresenter implements MapChangeListener {
     @FXML
     private Label moveDescriptionLabel;
     @FXML
-    private TextField moveListText;
-    @FXML
     private GridPane mapGrid;
     @FXML
     private TextField mapWidth;
@@ -69,7 +67,10 @@ public class SimulationPresenter implements MapChangeListener {
     private TextField chanceToGenerateGrassInTheJungle;
     @FXML
     private TextField jungleHeight;
-
+    @FXML
+    private TextField chanceToGenerateCandy;
+    @FXML
+    private TextField framesPerSecond;
 
     private final int defaultMapValue = 8;
     private final int defaultEnergyValue = 1;
@@ -146,20 +147,22 @@ public class SimulationPresenter implements MapChangeListener {
         int gnomesValue = getValueFromTextField(gnomes) < 0 ? defaultMapValue : getValueFromTextField(gnomes);
         int chanceToGenerateGrassInTheJungleValue = getValueFromTextField(chanceToGenerateGrassInTheJungle) < 0 ? 80 : getValueFromTextField(chanceToGenerateGrassInTheJungle);
         int jungleHeightValue = getValueFromTextField(jungleHeight) < 0 ? (int) (defaultMapValue * 0.2) : getValueFromTextField(jungleHeight);
+        int chanceToGenerateCandyValue = getValueFromTextField(chanceToGenerateCandy) < 0 ? (int) (defaultMapValue * 0.2) : getValueFromTextField(chanceToGenerateCandy);
+        int framesPerSecondValue = getValueFromTextField(framesPerSecond) < 0 ? (int) (defaultMapValue / 8 * 5 ) : getValueFromTextField(framesPerSecond);
         GrassField map = new GrassField(width,height,lostEnergyAtTheEndOfTheDayValue);
         map.addObserver((worldMap, message, vector2d) -> {
             String timeOfDay = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy hh-mm-ss"));
             System.out.printf("%s %s%n", timeOfDay, message);
         });
         try {
+            clock = new Movement();
             SimulationApp simulationApp = new SimulationApp();
-            simulationApp.launchSimulationWindow(map);
+            simulationApp.launchSimulationWindow(map,this);
             Simulation simulation = new Simulation(map,numberOfGrassAtTheStartValue,numberOfGrassEachDayValue,
                     startingNumberOfAnimalsValue,startEnergyOfAnimalsValue,gnomesValue,maxEnergyValue,energyRequiredToChargeValue,
                     energyIntervalToChargeValue,maxChargeRangeValue,energyPerGrassEatenValue,
                     chanceToGenerateGrassInTheJungleValue,jungleHeightValue,energyRequiredToMateValue,energyLostDuringMatingValue,mutationsInChildrenValue);
             this.thread = new Thread(simulation);
-            clock = new Movement();
             clock.start();
         } catch (IOException e){
             e.printStackTrace();
@@ -169,6 +172,14 @@ public class SimulationPresenter implements MapChangeListener {
 
     public void step(){
         thread.run();
+    }
+
+    public void resumeClicked(){
+        clock.start();
+    }
+
+    public void pauseClicked(){
+        clock.stop();
     }
 
     private void clearGrid() {

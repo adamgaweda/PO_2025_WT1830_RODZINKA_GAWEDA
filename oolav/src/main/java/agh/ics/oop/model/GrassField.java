@@ -77,6 +77,7 @@ public class GrassField extends AbstractWorldMap {
         }
         animals.remove(animal.pos);
         animal.pos = vectorAnimal;
+        animal.nextGen();
         animal.changeEnergy(-energyLoss);
     }
 

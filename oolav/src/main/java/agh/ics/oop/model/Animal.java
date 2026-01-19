@@ -27,6 +27,16 @@ public class Animal implements WorldElement,Comparable<Animal>{
         setEnergy(startEnergyOfAnimalsValue);
         this.dayOfBirth=dayOfBirth;
     }
+    public Animal(Vector2d birthVector, int gnomesValue,int maxEnergyValue,int startEnergyOfAnimalsValue,
+                  int dayOfBirth,List<MapDirection> gnomeList){
+        this.pos = birthVector;
+        this.facing = MapDirection.getRandom();
+        gen.addAll(gnomeList);
+        this.maxEnergy=maxEnergyValue;
+        setEnergy(startEnergyOfAnimalsValue);
+        this.dayOfBirth=dayOfBirth;
+    }
+
     public Vector2d getPosition() {
         return pos;
     }
@@ -112,6 +122,9 @@ public class Animal implements WorldElement,Comparable<Animal>{
         MapDirection currentGen=gen.get(whatGenCurrentlyOn);
         whatGenCurrentlyOn = (whatGenCurrentlyOn +1)%gen.size();
         return currentGen;
+    }
+    public List<MapDirection> getGnomes(){
+        return gen;
     }
 
 

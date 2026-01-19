@@ -159,7 +159,7 @@ public class SimulationPresenter implements MapChangeListener {
             Simulation simulation = new Simulation(map,numberOfGrassAtTheStartValue,numberOfGrassEachDayValue,
                     startingNumberOfAnimalsValue,startEnergyOfAnimalsValue,gnomesValue,maxEnergyValue,energyRequiredToChargeValue,
                     energyIntervalToChargeValue,maxChargeRangeValue,energyPerGrassEatenValue,
-                    chanceToGenerateGrassInTheJungleValue,jungleHeightValue,chanceToGenerateCandyValue);
+                    chanceToGenerateGrassInTheJungleValue,jungleHeightValue,chanceToGenerateCandyValue,energyRequiredToMateValue,energyLostDuringMatingValue,mutationsInChildrenValue);
             this.thread = new Thread(simulation);
             clock = new Movement();
             clock.start();

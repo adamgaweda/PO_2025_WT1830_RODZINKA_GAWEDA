@@ -28,11 +28,16 @@ public class Simulation extends AnimationTimer implements  Runnable {
     private final int energyIntervalToChargeValue;
     private final int maxChargeRangeValue;
     private int energyLoss;
+    private final int gnomesValue;
+    private final int energyRequiredToMateValue;
+    private final int energyLostDuringMateValue;
+    private final int mutationsInChildrenValue;
+    private final int maxEnergyValue;
 
 
     public Simulation(GrassField map, int numberOfGrassAtTheStartValue, int numberOfGrassEachDayValue,
                       int startingNumberOfAnimalsValue, int startEnergyOfAnimalsValue,int gnomesValue,int maxEnergyValue,int energyRequiredToChargeValue,int energyIntervalToChargeValue,int maxChargeRangeValue,
-                      int energyPerGrassEatenValue, int chanceToGenerateGrassInTheJungle, int jungleHeightValue,int chanceToGenerateCandy) {
+                      int energyPerGrassEatenValue, int chanceToGenerateGrassInTheJungle, int jungleHeightValue,int chanceToGenerateCandy,int energyRequiredToMateValue,int energyLostDuringMatingValue,int mutationsInChildrenValue) {
         this.worldMap = map;
         this.numberOfGrassEachDayValue=numberOfGrassEachDayValue;
         this.energyPerGrassEatenValue=energyPerGrassEatenValue;
@@ -40,6 +45,11 @@ public class Simulation extends AnimationTimer implements  Runnable {
         this.energyIntervalToChargeValue = energyIntervalToChargeValue;
         this.maxChargeRangeValue = maxChargeRangeValue;
         this.energyLoss = map.getEnergyLoss();
+        this.gnomesValue = gnomesValue;
+        this.energyRequiredToMateValue = energyRequiredToMateValue;
+        this.energyLostDuringMateValue = energyLostDuringMatingValue;
+        this.mutationsInChildrenValue = mutationsInChildrenValue;
+        this.maxEnergyValue = maxEnergyValue;
         this.grassGenerator = new GrassGenerator(map,jungleHeightValue,map.getWidth(),chanceToGenerateGrassInTheJungle,chanceToGenerateCandy);
         if (numberOfGrassAtTheStartValue>map.getCurrentBounds().topRightEdgeOfTheMap().getY()*map.getCurrentBounds().topRightEdgeOfTheMap().getX()){
             throw new IllegalArgumentException("Initial number of grass greater then map size");
@@ -136,6 +146,7 @@ public class Simulation extends AnimationTimer implements  Runnable {
     }
 
     private void animalReproduction(){
+        Set<Animal> dzieciaki = new HashSet<>();
         for (Animal animal : animals){
             Vector2d vector2d = animal.getPosition();
             Set<Animal> animalsAtVector2d = worldMap.getAnimalsAt(vector2d);
@@ -145,6 +156,32 @@ public class Simulation extends AnimationTimer implements  Runnable {
             Animal father,mother;
             father = animalsAtVector2d.stream().sorted(Comparator.reverseOrder()).limit(1).findFirst().get();
             mother = animalsAtVector2d.stream().sorted(Comparator.reverseOrder()).limit(2).skip(1).findFirst().get();
+            int fatherEnergy = father.getEnergy();
+            int motherEnergy = mother.getEnergy();
+            int gnomesProportion = (int) ( (double) gnomesValue*fatherEnergy/(motherEnergy+fatherEnergy));
+            List<MapDirection> gnomeList = new ArrayList();
+            Random random = new Random();
+            if(random.nextBoolean()){
+                gnomeList.addAll(father.getGnomes().subList(0,gnomesProportion));
+                gnomeList.addAll(mother.getGnomes().subList(gnomesProportion,gnomesValue));
+            }
+            else{
+                gnomeList.addAll(mother.getGnomes().subList(0,gnomesValue-gnomesProportion));
+                gnomeList.addAll(father.getGnomes().subList(gnomesValue-gnomesProportion,gnomesValue));
+            }
+            int iterations=random.nextInt(0,mutationsInChildrenValue);
+            for(int i=0;i<iterations;i++){
+                gnomeList.set(random.nextInt(gnomesValue),MapDirection.getRandom());
+            }
+            father.changeEnergy(-energyLostDuringMateValue);
+            mother.changeEnergy(-energyLostDuringMateValue);
+            Animal child = new Animal(vector2d,gnomesValue,maxEnergyValue,2*energyLostDuringMateValue,day,gnomeList);
+            dzieciaki.add(child);
+        }
+        for(Animal animal: dzieciaki){
+            animals.add(animal);
+            this.worldMap.place(animal);
+            allAnimals.add(animal);
         }
     }
 

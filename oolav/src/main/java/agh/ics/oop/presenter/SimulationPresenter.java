@@ -68,8 +68,6 @@ public class SimulationPresenter implements MapChangeListener {
     @FXML
     private TextField jungleHeight;
     @FXML
-    private TextField chanceToGenerateCandy;
-    @FXML
     private TextField framesPerSecond;
 
     private final int defaultMapValue = 8;
@@ -147,7 +145,6 @@ public class SimulationPresenter implements MapChangeListener {
         int gnomesValue = getValueFromTextField(gnomes) < 0 ? defaultMapValue : getValueFromTextField(gnomes);
         int chanceToGenerateGrassInTheJungleValue = getValueFromTextField(chanceToGenerateGrassInTheJungle) < 0 ? 80 : getValueFromTextField(chanceToGenerateGrassInTheJungle);
         int jungleHeightValue = getValueFromTextField(jungleHeight) < 0 ? (int) (defaultMapValue * 0.2) : getValueFromTextField(jungleHeight);
-        int chanceToGenerateCandyValue = getValueFromTextField(chanceToGenerateCandy) < 0 ? (int) (defaultMapValue * 0.2) : getValueFromTextField(chanceToGenerateCandy);
         int framesPerSecondValue = getValueFromTextField(framesPerSecond) < 0 ? (int) (defaultMapValue / 8 * 5 ) : getValueFromTextField(framesPerSecond);
         GrassField map = new GrassField(width,height,lostEnergyAtTheEndOfTheDayValue);
         map.addObserver((worldMap, message, vector2d) -> {

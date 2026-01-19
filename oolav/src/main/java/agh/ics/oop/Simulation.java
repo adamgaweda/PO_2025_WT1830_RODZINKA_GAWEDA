@@ -88,7 +88,7 @@ public class Simulation extends AnimationTimer implements  Runnable {
 
     private void removeDeadAnimals(){
         for (Animal animal : animals){
-            if (animal.getEnergy()==0){
+            if (animal.getEnergy()<0){
                 animal.setDeathDay(day);
                 deadAnimals.add(animal);
             }

@@ -13,14 +13,12 @@ public class GrassGenerator implements MapChangeListener {
     private final int mapJungleHeight;
     private final int mapJungleWidth;
     private final int chanceToGenerateInJungle;
-    private final int chanceToGenerateCandy;
 
-    public GrassGenerator(WorldMap map,int jungleHeight, int jungleWidth, int chanceToGenerateInJungle,int chanceToGenerateCandy){
+    public GrassGenerator(WorldMap map,int jungleHeight, int jungleWidth, int chanceToGenerateInJungle){
         this.map=map;
         map.addObserver(this);
         mapJungleHeight=jungleHeight;
         mapJungleWidth=jungleWidth;
-        this.chanceToGenerateCandy=chanceToGenerateCandy;
         this.chanceToGenerateInJungle=chanceToGenerateInJungle;
         for (int x = 0; x<map.getWidth(); x++)
             for (int y = 0; y<map.getHeight(); y++)
@@ -33,7 +31,6 @@ public class GrassGenerator implements MapChangeListener {
             throw new IllegalStateException("Every tile on the map is covered in grass. \nCan't generate grass");
         List<Vector2d> positions = selectPosition(jungle,nonJungle);
         int index = ThreadLocalRandom.current().nextInt(positions.size());
-        if((int) Math.random()*chanceToGenerateCandy == 1){return new Grass(positions.get(index),true);}
         return new Grass(positions.get(index));
     }
 

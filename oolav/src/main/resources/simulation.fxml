@@ -9,14 +9,15 @@
 
 <BorderPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
-            minHeight="550.0" minWidth="850.0"
-            fx:controller="agh.ics.oop.presenter.SimulationPresenter">
+            minHeight="550.0" minWidth="850.0">
     <center>
         <GridPane fx:id = "mapGrid" gridLinesVisible="true" alignment="CENTER"/>
     </center>
     <top>
         <VBox alignment="CENTER">
             <Label fx:id="moveDescriptionLabel" text="Move description will be displayed here" textAlignment="CENTER"/>
+            <Button text="Resume" onAction="#resumeClicked"/>
+            <Button text="Pause" onAction="#pauseClicked"/>
         </VBox>
     </top>
 </BorderPane>

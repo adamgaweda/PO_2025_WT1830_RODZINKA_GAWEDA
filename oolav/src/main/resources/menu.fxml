@@ -32,6 +32,7 @@
             <TextField fx:id="chanceToGenerateGrassInTheJungle" promptText="What percent change for the Grass to generate in the jungle "/>
             <TextField fx:id="jungleHeight" promptText="What height should the jungle have"/>
             <TextField fx:id="chanceToGenerateCandy" promptText="One time per how many shall candy spawn"/>
+            <TextField fx:id="framesPerSecond" promptText="How many frames per second"/>
 
             <Button text="Start" onAction="#onSimulationStartClicked"/>
         </VBox>

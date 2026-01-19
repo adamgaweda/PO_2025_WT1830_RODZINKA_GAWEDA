@@ -33,11 +33,11 @@ public class SimulationApp extends Application {
         primaryStage.minHeightProperty().bind(viewRoot.minHeightProperty());
     }
 
-    public void launchSimulationWindow(AbstractWorldMap map) throws IOException {
+    public void launchSimulationWindow(AbstractWorldMap map, SimulationPresenter presenter) throws IOException {
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(getClass().getClassLoader().getResource("simulation.fxml"));
+        loader.setController(presenter);
         BorderPane viewRoot = loader.load();
-        SimulationPresenter presenter = loader.getController();
         presenter.setMap(map);
         map.addObserver(presenter);
         Stage stage = new Stage();

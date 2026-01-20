@@ -7,6 +7,8 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 
+
+import javafx.scene.paint.Color;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -17,6 +19,8 @@ public class WorldElementBox{
     private final WorldElement element;
     private Image image;
     private String text;
+    private double factor;
+    private boolean isAnimal=false;
 
 
     public WorldElementBox(WorldElement element) {
@@ -25,6 +29,8 @@ public class WorldElementBox{
         this.image = getFromCache(imageName);
         if(element instanceof Animal){
             text=element.toString();
+            factor=((Animal) element).getEnergyfactor();
+            isAnimal=true;
         }
     }
 
@@ -33,7 +39,17 @@ public class WorldElementBox{
     }
 
     public void draw(GraphicsContext gc, double x, double y, double width, double height){
+        if(isAnimal){
+            double red = 1.0-factor;
+            double green = factor;
+            double blue =0;
+            Color kolor = new Color(red,green,blue,1);
+
+            gc.setFill(kolor);
+            gc.fillRoundRect(x,y+height,width,height/20,5,5);
+        }
         gc.drawImage(image,x,y,width,height);
+        gc.setFill(Color.BLACK);
         gc.fillText(
                 text,
                 x,

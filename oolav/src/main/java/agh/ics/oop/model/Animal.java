@@ -100,6 +100,8 @@ public class Animal implements WorldElement,Comparable<Animal>{
 
     public int getEnergy(){return energy;}
 
+    public double getEnergyfactor(){return (double) energy/maxEnergy;}
+
     public boolean isAT(Vector2d position) {
         return pos.equals(position);
     }

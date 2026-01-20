@@ -14,11 +14,23 @@
     <center>
         <Canvas fx:id = "mapCanvas" width="500" height="500"/>
     </center>
-    <top>
+    <left>
         <VBox alignment="CENTER">
             <Label fx:id="moveDescriptionLabel" text="Move description will be displayed here" textAlignment="CENTER"/>
             <Button text="Resume" onAction="#resumeClicked"/>
             <Button text="Pause" onAction="#pauseClicked"/>
+            <Button text="Step" onAction="#step"/>
         </VBox>
-    </top>
+    </left>
+    <right>
+        <VBox alignment="CENTER">
+            <Label fx:id="animalNumberLabel" textAlignment="CENTER"/>
+            <Label fx:id="grassNumberLabel" textAlignment="CENTER"/>
+            <Label fx:id="freeSlotsLabel" textAlignment="CENTER"/>
+            <Label fx:id="lifeSpanLabel" textAlignment="CENTER"/>
+            <Label fx:id="childrenNumberLabel" textAlignment="CENTER"/>
+            <Label fx:id="energyLabel" textAlignment="CENTER"/>
+            <Label fx:id="gnomeLabel" textAlignment="CENTER"/>
+        </VBox>
+    </right>
 </BorderPane>

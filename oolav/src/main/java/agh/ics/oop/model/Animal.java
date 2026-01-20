@@ -119,14 +119,17 @@ public class Animal implements WorldElement,Comparable<Animal>{
     }
 
     public MapDirection getWhatGenCurrentlyOn(){
-        MapDirection currentGen=gen.get(whatGenCurrentlyOn);
         whatGenCurrentlyOn = (whatGenCurrentlyOn +1)%gen.size();
-        return currentGen;
+        return gen.get(whatGenCurrentlyOn);
     }
     public List<MapDirection> getGnomes(){
         return gen;
     }
 
+    public void nextGen(){
+        MapDirection currentGen=gen.get(whatGenCurrentlyOn);
+        whatGenCurrentlyOn = (whatGenCurrentlyOn +1)%gen.size();
+    }
 
     public void generateGenes(int numberOfGenes){
         for (int i = 0; i<numberOfGenes;i++){

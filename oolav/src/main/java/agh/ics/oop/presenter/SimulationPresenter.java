@@ -261,19 +261,19 @@ public class SimulationPresenter implements MapChangeListener {
         Platform.runLater(() -> {
             moveDescriptionLabel.setText(message);
             String text;
-            text = String.join("Średnia energia: ",String.valueOf(simulation.getAverageEnergy()));
+            text = String.format("Średnia energia: " + simulation.getAverageEnergy());
             energyLabel.setText(text);
-            text = String.join("Srednia energia: ",String.valueOf(simulation.getAverageAnimalChildrenNumber()));
+            text = String.format("Srednia energia: " + simulation.getAverageAnimalChildrenNumber());
             childrenNumberLabel.setText(text);
-            text = String.join("Liczba zwierzat: ",String.valueOf(worldMap.numberOfAnimals()));
+            text = String.format("Liczba zwierzat: " +worldMap.numberOfAnimals());
             animalNumberLabel.setText(text);
-            text = String.join("Liczba traw: ",String.valueOf(worldMap.numberOfGrasses()));
+            text = String.format("Liczba traw: " + worldMap.numberOfGrasses());
             grassNumberLabel.setText(text);
-            text = String.join("Pustych pol: ",String.valueOf(worldMap.getEmptySquares()));
+            text = String.format("Pustych pol: " + worldMap.getEmptySquares());
             freeSlotsLabel.setText(text);
-            text = String.join("Srednia dlugosc zycia: ",String.valueOf(simulation.getAverageAnimalLiveSpan()));
+            text = String.format("Srednia dlugosc zycia: " + simulation.getAverageAnimalLiveSpan());
             lifeSpanLabel.setText(text);
-            text = String.join("Sredni genom: ",String.valueOf(simulation.getGnomes()));
+            text = String.format("Sredni genom: " + simulation.getGnomes());
             gnomeLabel.setText(text);
             drawMap();
         });

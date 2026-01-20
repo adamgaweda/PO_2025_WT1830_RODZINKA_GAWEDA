@@ -20,7 +20,7 @@ public class GrassField extends AbstractWorldMap {
         }
         topRightCorner = new Vector2d(width,height);
         final UUID uuid = UUID.randomUUID();
-        this.emptySquares=width*height;
+        this.emptySquares=(width+1)*(height+1);
         this.energyLoss=energyLoss;
     }
 
@@ -51,7 +51,7 @@ public class GrassField extends AbstractWorldMap {
         Vector2d vector2d = animal.getPosition();
         if (!animals.containsKey(vector2d))
             animals.put(vector2d, new HashSet<>());
-        if (animals.get(vector2d).isEmpty() && grasses.containsKey(vector2d)){
+        if (animals.get(vector2d).isEmpty() && !grasses.containsKey(vector2d)){
             emptySquares--;
         }
         animals.get(vector2d).add(animal);
@@ -85,7 +85,7 @@ public class GrassField extends AbstractWorldMap {
             vectorAnimal = new Vector2d(vectorAnimal.getX(),0);
             animal.facing = animal.facing.turnAround();
         }
-        animals.remove(animal.pos);
+        remove(animal);
         animal.setPos(vectorAnimal);
         animal.nextGen();
         animal.changeEnergy(-energyLoss);

@@ -204,6 +204,28 @@ public class Simulation extends AnimationTimer implements  Runnable {
         return animals.stream().mapToDouble(Animal::getEnergy).average().orElse(0);
     }
 
+    public List<MapDirection> getGnomes(){
+        List<MapDirection> gnomeList = new ArrayList<>();
+        for(int i=0;i<gnomesValue;i++){
+            Map<MapDirection,Integer> licznik = new HashMap<>();
+            for(Animal animal: allAnimals){
+                MapDirection gen = animal.getGnomes().get(i);
+                licznik.put(gen,licznik.getOrDefault(gen,0)+1);
+            }
+
+            MapDirection gnome = MapDirection.getRandom();
+            int maxCount=0;
+            for(Map.Entry<MapDirection,Integer> entry : licznik.entrySet()){
+                if(entry.getValue()>maxCount){
+                    maxCount=entry.getValue();
+                    gnome=entry.getKey();
+                }
+            }
+            gnomeList.add(gnome);
+        }
+        return gnomeList;
+    }
+
     public List<Animal> getAnimals() {
         return new ArrayList<Animal>(animals);
     }

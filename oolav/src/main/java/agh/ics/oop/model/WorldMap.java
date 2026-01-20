@@ -62,4 +62,8 @@ public interface WorldMap extends MoveValidator {
     int getHeight();
 
     int getWidth();
+
+    public int numberOfGrasses();
+    public int numberOfAnimals();
+    public int getEmptySquares();
 }

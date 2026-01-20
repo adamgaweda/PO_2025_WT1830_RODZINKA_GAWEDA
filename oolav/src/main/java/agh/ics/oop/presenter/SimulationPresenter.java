@@ -35,6 +35,20 @@ public class SimulationPresenter implements MapChangeListener {
     @FXML
     private Label moveDescriptionLabel;
     @FXML
+    private Label animalNumberLabel;
+    @FXML
+    private Label grassNumberLabel;
+    @FXML
+    private Label freeSlotsLabel;
+    @FXML
+    private Label lifeSpanLabel;
+    @FXML
+    private Label childrenNumberLabel;
+    @FXML
+    private Label energyLabel;
+    @FXML
+    private Label gnomeLabel;
+    @FXML
     private Canvas mapCanvas;
     @FXML
     private TextField mapWidth;
@@ -150,12 +164,12 @@ public class SimulationPresenter implements MapChangeListener {
             WorldElementBox animalBox = new WorldElementBox(animal);
             x=x+cellWidth*0.1;
             y=y+cellHeight*0.1;
-            animalBox.draw(gc,x+5,y+5,cellWidth*0.8,cellHeight*0.8);
+            animalBox.draw(gc,x+cellWidth*0.05,y+cellHeight*0.05,cellWidth*0.8,cellHeight*0.8);
         }
         gc.fillText(
                 "y\\x",
-                cellWidth/8,
-                cellHeight/8
+                margin/2,
+                margin/2
         );
 
 //        for (int i = 0; i<width +1; i++){
@@ -246,6 +260,21 @@ public class SimulationPresenter implements MapChangeListener {
     public void mapChanged(WorldMap worldMap, String message, Vector2d vector2d) {
         Platform.runLater(() -> {
             moveDescriptionLabel.setText(message);
+            String text;
+            text = String.join("Średnia energia: ",String.valueOf(simulation.getAverageEnergy()));
+            energyLabel.setText(text);
+            text = String.join("Srednia energia: ",String.valueOf(simulation.getAverageAnimalChildrenNumber()));
+            childrenNumberLabel.setText(text);
+            text = String.join("Liczba zwierzat: ",String.valueOf(worldMap.numberOfAnimals()));
+            animalNumberLabel.setText(text);
+            text = String.join("Liczba traw: ",String.valueOf(worldMap.numberOfGrasses()));
+            grassNumberLabel.setText(text);
+            text = String.join("Pustych pol: ",String.valueOf(worldMap.getEmptySquares()));
+            freeSlotsLabel.setText(text);
+            text = String.join("Srednia dlugosc zycia: ",String.valueOf(simulation.getAverageAnimalLiveSpan()));
+            lifeSpanLabel.setText(text);
+            text = String.join("Sredni genom: ",String.valueOf(simulation.getGnomes()));
+            gnomeLabel.setText(text);
             drawMap();
         });
     }

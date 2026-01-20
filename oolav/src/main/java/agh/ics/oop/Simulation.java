@@ -111,7 +111,7 @@ public class Simulation extends AnimationTimer implements  Runnable {
                         worldMap.move(animal);
                         try{
                             if(worldMap.isGrassAt(animal.getPosition())){
-                                worldMap.remove((Grass) worldMap.objectAt(animal.getPosition()).get());
+                                worldMap.remove(worldMap.grassAt(animal.getPosition()));
                             }
                         }
                         catch(Exception e){
@@ -156,6 +156,9 @@ public class Simulation extends AnimationTimer implements  Runnable {
                 continue;
             int fatherEnergy = father.getEnergy();
             int motherEnergy = mother.getEnergy();
+            if(motherEnergy<energyRequiredToMateValue || fatherEnergy<energyRequiredToMateValue){
+                continue;
+            }
             int gnomesProportion = (int) ( (double) gnomesValue*fatherEnergy/(motherEnergy+fatherEnergy));
             List<MapDirection> gnomeList = new ArrayList<>();
             Random random = new Random();
@@ -201,7 +204,7 @@ public class Simulation extends AnimationTimer implements  Runnable {
         return animals.stream().mapToDouble(Animal::getEnergy).average().orElse(0);
     }
 
-    List<Animal> getAnimals() {
+    public List<Animal> getAnimals() {
         return new ArrayList<Animal>(animals);
     }
 

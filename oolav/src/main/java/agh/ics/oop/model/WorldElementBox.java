@@ -16,20 +16,29 @@ public class WorldElementBox{
     private static Map<String,Image> imageCache = new HashMap<String,Image>();
     private final WorldElement element;
     private Image image;
+    private String text;
 
 
     public WorldElementBox(WorldElement element) {
         this.element = element;
         String imageName= element.getImage();
         this.image = getFromCache(imageName);
-
+        if(element instanceof Animal){
+            text=element.toString();
+        }
     }
 
     private Image getFromCache(String name){
         return imageCache.computeIfAbsent(name,image -> new Image(name));
     }
 
-    public void draw(GraphicsContext gc){
+    public void draw(GraphicsContext gc, double x, double y, double width, double height){
+        gc.drawImage(image,x,y,width,height);
+        gc.fillText(
+                text,
+                x,
+                y+height
+        );
 
     }
 }

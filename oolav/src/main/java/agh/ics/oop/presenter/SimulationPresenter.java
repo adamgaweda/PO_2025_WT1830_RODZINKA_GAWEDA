@@ -28,8 +28,9 @@ import java.util.concurrent.TimeUnit;
 
 
 public class SimulationPresenter implements MapChangeListener {
-    WorldMap worldMap;
+    GrassField worldMap;
     Thread thread;
+    private Simulation simulation;
     private Movement clock;
     @FXML
     private Label moveDescriptionLabel;
@@ -78,7 +79,7 @@ public class SimulationPresenter implements MapChangeListener {
 
     @FXML
     private void initialize(){
-        gc=mapCanvas.getGraphicsContext2D();
+        if(mapCanvas != null)gc=mapCanvas.getGraphicsContext2D();
     }
 
     private final int defaultMapValue = 8;
@@ -87,7 +88,7 @@ public class SimulationPresenter implements MapChangeListener {
     private final int CELL_HIGHT=33;
     private final int CELL_WIDTH=33;
 
-    public void setMap(WorldMap worldMap) {
+    public void setMap(GrassField worldMap) {
         this.worldMap=worldMap;
     }
 
@@ -100,11 +101,12 @@ public class SimulationPresenter implements MapChangeListener {
         int width = topRightEdgeOfTheMap.getX()-bottomLeftEdgeOfTheMap.getX() +1;
         int height = topRightEdgeOfTheMap.getY()- bottomLeftEdgeOfTheMap.getY() +1;
         double canvasHeight=mapCanvas.getHeight();
-        double canvasWidht=mapCanvas.getWidth();
+        double canvasWidth=mapCanvas.getWidth();
         gc.setFill(Color.BURLYWOOD);
-        gc.fillRect(0,0,mapCanvas.getWidth(),mapCanvas.getHeight());
+        gc.clearRect(0,0,canvasWidth,canvasHeight);
+        gc.fillRect(0,0,canvasWidth,canvasHeight);
         double margin=20;
-        double cellWidth=(canvasWidht-margin)/width;
+        double cellWidth=(canvasWidth-margin)/width;
         double cellHeight=(canvasHeight-margin)/height;
 
         gc.setFill(Color.BLACK);
@@ -128,24 +130,50 @@ public class SimulationPresenter implements MapChangeListener {
         }
         for(int i=0; i<height;i++){
             double y = margin + i*cellHeight;
-            gc.strokeLine(margin,y,canvasWidht,y);
+            gc.strokeLine(margin,y,canvasWidth,y);
         }
+        List<Animal> animals= simulation.getAnimals();
+        List<Grass> grasses = worldMap.getGrasses();
+        for (Grass grass:grasses){
+            Vector2d position = grass.getPosition();
+            double x = margin + (position.getX() - bottomLeftEdgeOfTheMap.getX())*cellWidth;
+            double y = margin + (topRightEdgeOfTheMap.getY() - position.getY())*cellHeight;
+            WorldElementBox grassBox = new WorldElementBox(grass);
+            x=x+cellWidth*0.1;
+            y=y+cellHeight*0.1;
+            grassBox.draw(gc,x,y,cellWidth*0.8,cellHeight*0.8);
+        }
+        for (Animal animal:animals){
+            Vector2d position = animal.getPosition();
+            double x = margin + (position.getX() - bottomLeftEdgeOfTheMap.getX())*cellWidth;
+            double y = margin + (topRightEdgeOfTheMap.getY() - position.getY())*cellHeight;
+            WorldElementBox animalBox = new WorldElementBox(animal);
+            x=x+cellWidth*0.1;
+            y=y+cellHeight*0.1;
+            animalBox.draw(gc,x+5,y+5,cellWidth*0.8,cellHeight*0.8);
+        }
+        gc.fillText(
+                "y\\x",
+                cellWidth/8,
+                cellHeight/8
+        );
 
-        for (int i = 0; i<width +1; i++){
-            for (int j = height; j > -1; j--){
-                Vector2d position = new Vector2d(i + bottomLeftEdgeOfTheMap.getX(), topRightEdgeOfTheMap.getY()-j);
-//                if(worldMap.isOccupied()
+//        for (int i = 0; i<width +1; i++){
+//            for (int j = height; j > -1; j--){
+//                Vector2d position = new Vector2d(i + bottomLeftEdgeOfTheMap.getX(), topRightEdgeOfTheMap.getY()-j);
+//
 //                if (worldMap.isOccupied(position)){
 //                    Optional<WorldElement> optElement = worldMap.objectAt(position);
 //                    final int col = i+1;
 //                    final int row = j+1;
+//
 //                    optElement.ifPresent(element -> {
 //                        WorldElementBox box = new WorldElementBox(element);
 //
 //                    });
 //                }
-            }
-        }
+//            }
+//        }
 //        mapGrid.getColumnConstraints().add(new ColumnConstraints(CELL_HIGHT));
 //        mapGrid.getRowConstraints().add(new RowConstraints(CELL_WIDTH));
 //        Label label = new Label("y\\x");
@@ -183,10 +211,11 @@ public class SimulationPresenter implements MapChangeListener {
             clock = new Movement();
             SimulationApp simulationApp = new SimulationApp();
             simulationApp.launchSimulationWindow(map,this);
-            Simulation simulation = new Simulation(map,numberOfGrassAtTheStartValue,numberOfGrassEachDayValue,
+            this.simulation = new Simulation(map,numberOfGrassAtTheStartValue,numberOfGrassEachDayValue,
                     startingNumberOfAnimalsValue,startEnergyOfAnimalsValue,gnomesValue,maxEnergyValue,energyRequiredToChargeValue,
                     energyIntervalToChargeValue,maxChargeRangeValue,energyPerGrassEatenValue,
                     chanceToGenerateGrassInTheJungleValue,jungleHeightValue,energyRequiredToMateValue,energyLostDuringMatingValue,mutationsInChildrenValue);
+            if(mapCanvas != null && gc == null)gc=mapCanvas.getGraphicsContext2D();
             this.thread = new Thread(simulation);
             clock.start();
         } catch (IOException e){

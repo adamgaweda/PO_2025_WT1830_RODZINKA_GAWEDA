@@ -26,7 +26,7 @@ public class GrassField extends AbstractWorldMap {
 
     public void remove(Animal animal){
         Vector2d vector2d = animal.getPosition();
-        if (!animals.containsKey(vector2d) || animals.get(vector2d).contains(animal)){
+        if (!animals.containsKey(vector2d) || !animals.get(vector2d).contains(animal)){
             throw new IllegalArgumentException("This animal is not present at " + vector2d);
         }
         animals.get(vector2d).remove(animal);

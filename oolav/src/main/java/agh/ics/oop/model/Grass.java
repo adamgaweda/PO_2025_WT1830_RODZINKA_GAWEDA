@@ -28,7 +28,7 @@ public class Grass implements WorldElement {
 
     @Override
     public String getImage(){
-        return "grass.png";
+        return "grass.jpg";
     }
 
 }

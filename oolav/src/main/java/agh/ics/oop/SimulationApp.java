@@ -1,6 +1,7 @@
 package agh.ics.oop;
 
 import agh.ics.oop.model.AbstractWorldMap;
+import agh.ics.oop.model.GrassField;
 import agh.ics.oop.presenter.SimulationPresenter;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -33,7 +34,7 @@ public class SimulationApp extends Application {
         primaryStage.minHeightProperty().bind(viewRoot.minHeightProperty());
     }
 
-    public void launchSimulationWindow(AbstractWorldMap map, SimulationPresenter presenter) throws IOException {
+    public void launchSimulationWindow(GrassField map, SimulationPresenter presenter) throws IOException {
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(getClass().getClassLoader().getResource("simulation.fxml"));
         loader.setController(presenter);

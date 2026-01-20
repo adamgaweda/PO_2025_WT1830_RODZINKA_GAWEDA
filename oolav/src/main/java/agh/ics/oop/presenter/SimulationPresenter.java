@@ -199,11 +199,13 @@ public class SimulationPresenter implements MapChangeListener {
     public void onSimulationStartClicked(){
         int width = getValueFromTextField(mapWidth) < 0 ? defaultMapValue : getValueFromTextField(mapWidth);
         int height = getValueFromTextField(mapHeight) < 0 ? defaultMapValue : getValueFromTextField(mapHeight);
+        if (height > 20 || width > 20)
+            throw new IllegalArgumentException("The map is too big");
         int numberOfGrassAtTheStartValue = getValueFromTextField(numberOfGrassAtTheStart) < 0 ? defaultMapValue : getValueFromTextField(numberOfGrassAtTheStart);
-        int energyPerGrassEatenValue = getValueFromTextField(energyPerGrassEaten) < 0 ? defaultMapValue : getValueFromTextField(energyPerGrassEaten);
-        int numberOfGrassEachDayValue = getValueFromTextField(numberOfGrassEachDay) < 0 ? defaultMapValue : getValueFromTextField(numberOfGrassEachDay);
+        int energyPerGrassEatenValue = getValueFromTextField(energyPerGrassEaten) < 0 ? defaultEnergyValue*2 : getValueFromTextField(energyPerGrassEaten);
+        int numberOfGrassEachDayValue = getValueFromTextField(numberOfGrassEachDay) < 0 ? defaultEnergyValue*2 : getValueFromTextField(numberOfGrassEachDay);
         int startingNumberOfAnimalsValue = getValueFromTextField(startingNumberOfAnimals) < 0 ? defaultMapValue : getValueFromTextField(startingNumberOfAnimals);
-        int startEnergyOfAnimalsValue = getValueFromTextField(startEnergyOfAnimals) < 0 ? defaultMapValue*defaultMapValue : getValueFromTextField(startEnergyOfAnimals);
+        int startEnergyOfAnimalsValue = getValueFromTextField(startEnergyOfAnimals) < 0 ? defaultMapValue : getValueFromTextField(startEnergyOfAnimals);
         int lostEnergyAtTheEndOfTheDayValue = getValueFromTextField(lostEnergyAtTheEndOfTheDay) < 0 ? defaultEnergyValue : getValueFromTextField(lostEnergyAtTheEndOfTheDay);
         int maxEnergyValue = getValueFromTextField(maxEnergy) < 0 ? defaultMapValue*defaultMapValue : getValueFromTextField(maxEnergy);
         int energyRequiredToChargeValue = getValueFromTextField(energyRequiredToCharge) < 0 ? defaultMapValue*defaultMapValue : getValueFromTextField(energyRequiredToCharge);
@@ -213,16 +215,22 @@ public class SimulationPresenter implements MapChangeListener {
         int energyLostDuringMatingValue = getValueFromTextField(energyLostDuringMating) < 0 ? defaultMapValue : getValueFromTextField(energyLostDuringMating);
         int mutationsInChildrenValue = getValueFromTextField(mutationsInChildren) < 0 ? defaultMapValue : getValueFromTextField(mutationsInChildren);
         int gnomesValue = getValueFromTextField(gnomes) < 0 ? defaultMapValue : getValueFromTextField(gnomes);
+        if (mutationsInChildrenValue>gnomesValue)
+            throw new IllegalArgumentException("Number or mutating genes can't be larger than the number of genes");
         int chanceToGenerateGrassInTheJungleValue = getValueFromTextField(chanceToGenerateGrassInTheJungle) < 0 ? 80 : getValueFromTextField(chanceToGenerateGrassInTheJungle);
+        if (chanceToGenerateGrassInTheJungleValue>100)
+            throw new IllegalArgumentException("Percent chance can't be greater than 100%");
         int jungleHeightValue = getValueFromTextField(jungleHeight) < 0 ? (int) (defaultMapValue * 0.2) : getValueFromTextField(jungleHeight);
-        int framesPerSecondValue = getValueFromTextField(framesPerSecond) < 0 ? (int) (defaultMapValue / 8 * 5 ) : getValueFromTextField(framesPerSecond);
+        if (jungleHeightValue>height)
+            throw new IllegalArgumentException("The jungle can't be bigger than the map");
+        int framesPerSecondValue = getValueFromTextField(framesPerSecond) <= 0 ? (int) (defaultMapValue / 8 * 5 ) : getValueFromTextField(framesPerSecond);
         GrassField map = new GrassField(width,height,lostEnergyAtTheEndOfTheDayValue);
         map.addObserver((worldMap, message, vector2d) -> {
             String timeOfDay = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy hh-mm-ss"));
             System.out.printf("%s %s%n", timeOfDay, message);
         });
         try {
-            clock = new Movement();
+            clock = new Movement(framesPerSecondValue);
             SimulationApp simulationApp = new SimulationApp();
             simulationApp.launchSimulationWindow(map,this);
             this.simulation = new Simulation(map,numberOfGrassAtTheStartValue,numberOfGrassEachDayValue,
@@ -290,12 +298,15 @@ public class SimulationPresenter implements MapChangeListener {
 
     private class Movement extends AnimationTimer{
 
+        private Movement(long framesPerSecond){
+            this.framesPerSecond=framesPerSecond;
+        }
         private long framesPerSecond = 5L;
-        private long interval = 1000000000L / framesPerSecond;
+        private long interval = 1000000000L;
         private long last = 0;
         @Override
         public void handle(long now){
-            if (now - last > interval){
+            if (now - last > interval/framesPerSecond){
                 step();
                 last = now;
             }

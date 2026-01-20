@@ -46,6 +46,7 @@ public class GrassField extends AbstractWorldMap {
         }
     }
 
+
     @Override
     public void place(Animal animal) {
         Vector2d vector2d = animal.getPosition();

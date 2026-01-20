@@ -40,8 +40,8 @@ public class WorldElementBox{
 
     public void draw(GraphicsContext gc, double x, double y, double width, double height){
         if(isAnimal){
-            double red = 1.0-factor;
-            double green = factor;
+            double red = Math.min(1.0-factor,1.0);
+            double green = Math.max(factor,0);
             double blue =0;
             Color kolor = new Color(red,green,blue,1);
 

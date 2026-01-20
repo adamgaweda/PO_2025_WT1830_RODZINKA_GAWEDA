@@ -65,8 +65,6 @@ public class Simulation extends AnimationTimer implements  Runnable {
         }
     }
     public void run(){
-        System.out.println(worldMap.numberOfAnimals());
-        System.out.println(worldMap.numberOfGrasses());
         removeDeadAnimals();
         worldMap.removeDeadAnimals();
         moveAnimal();

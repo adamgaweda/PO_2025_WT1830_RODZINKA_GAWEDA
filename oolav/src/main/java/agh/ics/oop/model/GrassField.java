@@ -46,16 +46,6 @@ public class GrassField extends AbstractWorldMap {
         }
     }
 
-    public void removeDeadAnimals() {
-        List<Animal> aaaaanimal = animals.values().stream()
-                .flatMap(Set::stream)
-                .toList();
-        for (Animal animal : aaaaanimal) {
-            if (animal.getEnergy() < 0) {
-                remove(animal);
-            }
-        }
-    }
     @Override
     public void place(Animal animal) {
         Vector2d vector2d = animal.getPosition();

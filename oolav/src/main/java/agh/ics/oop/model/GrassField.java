@@ -89,9 +89,7 @@ public class GrassField extends AbstractWorldMap {
         animals.remove(animal.pos);
         animal.setPos(vectorAnimal);
         animal.nextGen();
-        System.out.printf("\n"+animal.energy);
         animal.changeEnergy(-energyLoss);
-        System.out.printf("\n"+animal.energy);
         place(animal);
     }
 

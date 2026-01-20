@@ -36,6 +36,16 @@ public class GrassField extends AbstractWorldMap {
 
     }
 
+    public void removeDeadAnimals() {
+        List<Animal> aaaaanimal = animals.values().stream()
+                .flatMap(Set::stream)
+                .toList();
+        for (Animal animal : aaaaanimal) {
+            if (animal.getEnergy() < 0) {
+                remove(animal);
+            }
+        }
+    }
     @Override
     public void place(Animal animal) {
         Vector2d vector2d = animal.getPosition();
@@ -76,8 +86,9 @@ public class GrassField extends AbstractWorldMap {
             animal.facing = animal.facing.turnAround();
         }
         animals.remove(animal.pos);
-        animal.pos = vectorAnimal;
+        animal.setPos(vectorAnimal);
         animal.changeEnergy(-energyLoss);
+        place(animal);
     }
 
     public void place(Grass grass){
@@ -150,9 +161,7 @@ public class GrassField extends AbstractWorldMap {
     }
 
     public int numberOfAnimals(){
-        return Math.toIntExact(animals.keySet().stream()
-                .filter(position -> !animals.get(position).isEmpty())
-                .count());
+        return animals.values().stream().mapToInt(Set::size).sum();
     }
 
     public int getEmptySquares(){

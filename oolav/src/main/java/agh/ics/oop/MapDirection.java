@@ -39,18 +39,6 @@ public enum MapDirection {
         }; //obrot w prawo o 45 stopni
     }
 
-    public MapDirection prev() {
-        return switch (this){
-            case North -> NorthWest;
-            case NorthWest -> West;
-            case West -> SouthWest;
-            case SouthWest -> South;
-            case South -> SouthEast;
-            case SouthEast -> East;
-            case East -> NorthEast;
-            case NorthEast -> North;
-        }; // obrow w lewo o 45 stopni
-    }
 
     public Vector2d toUnitVector() {
         return switch (this) {
@@ -75,32 +63,6 @@ public enum MapDirection {
             case SouthWest -> NorthEast;
             case West -> East;
             case NorthWest -> SouthEast;
-        };
-    }
-
-    public MapDirection next90(){
-        return switch (this){
-            case North -> East;
-            case NorthEast -> SouthEast;
-            case East -> South;
-            case SouthEast -> SouthWest;
-            case South -> West;
-            case SouthWest -> NorthWest;
-            case West -> North;
-            case NorthWest -> NorthEast;
-        };
-    }
-
-    public MapDirection prev90(){
-        return switch (this){
-            case North -> West;
-            case NorthWest -> SouthWest;
-            case West -> South;
-            case SouthWest -> SouthEast;
-            case South -> East;
-            case SouthEast -> NorthEast;
-            case East -> North;
-            case NorthEast -> NorthWest;
         };
     }
 

@@ -10,7 +10,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import static java.lang.Math.min;
 
-public class Simulation extends AnimationTimer implements  Runnable {
+public class Simulation implements  Runnable {
     List<Animal> animals = new ArrayList<Animal>();
     List<Animal> deadAnimals = new ArrayList<>();
     List<Animal> allAnimals = new ArrayList<>();
@@ -74,15 +74,6 @@ public class Simulation extends AnimationTimer implements  Runnable {
         day++;
     }
 
-
-
-    @Override
-    public void handle(long now) {
-        if (now - last > INTERVAL){
-            run();
-            last = now;
-        }
-    }
 
     private void removeDeadAnimals(){
         for (Animal animal : animals){

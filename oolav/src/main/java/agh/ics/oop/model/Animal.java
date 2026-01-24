@@ -144,7 +144,6 @@ public class Animal implements WorldElement,Comparable<Animal>{
         return Comparator.comparingInt((Animal animal) -> animal.energy)
                 .thenComparingInt(Animal::getLiveSpan)
                 .thenComparingInt(Animal::getNumberOfChildren)
-//                .thenComparingInt(Animal::getMaxEnergy)
                 .compare(this,otherAnimal);
     }
 }

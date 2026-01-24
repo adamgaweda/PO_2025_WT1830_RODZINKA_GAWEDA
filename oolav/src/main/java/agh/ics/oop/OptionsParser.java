@@ -20,25 +20,5 @@ public class OptionsParser {
                     default -> throw new IllegalArgumentException(arg + " is not legal move specification");
                 } )
                 .collect(Collectors.toList());
-//        List<MoveDirection> result = new ArrayList<MoveDirection>(args.length);;
-//        for (String b:args){
-//            switch (b) {
-//                case "f":
-//                    result.add(MoveDirection.FORWARD);
-//                    break;
-//                case "b":
-//                    result.add(MoveDirection.BACKWARD);
-//                    break;
-//                case "r":
-//                    result.add(MoveDirection.RIGHT);
-//                    break;
-//                case "l":
-//                    result.add(MoveDirection.LEFT);
-//                    break;
-//                default:
-//                    throw new IllegalArgumentException(b + " is not legal move specification");
-//            }
-//        }
-//        return result;
     }
 }

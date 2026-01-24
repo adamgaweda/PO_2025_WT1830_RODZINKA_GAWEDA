@@ -29,21 +29,21 @@ public class GrassGenerator implements MapChangeListener {
     public Grass generateGrass(){
         if (jungle.isEmpty() && nonJungle.isEmpty())
             throw new IllegalStateException("Every tile on the map is covered in grass. \nCan't generate grass");
-        List<Vector2d> positions = selectPosition(jungle,nonJungle);
-        int index = ThreadLocalRandom.current().nextInt(positions.size());
-        return new Grass(positions.get(index));
+        List<Vector2d> whichList = selectPosition();
+        int index = ThreadLocalRandom.current().nextInt(whichList.size());
+        return new Grass(whichList.get(index));
     }
 
-    public List<Vector2d> selectPosition(List<Vector2d> preferred, List<Vector2d> notPreferred){
-        if (preferred.isEmpty() && notPreferred.isEmpty())
+    public List<Vector2d> selectPosition(){
+        if (jungle.isEmpty() && nonJungle.isEmpty())
             throw new IllegalStateException("All tiles are occupied");
-        if (preferred.isEmpty())
-            return notPreferred;
-        if (notPreferred.isEmpty())
-            return preferred;
+        if (jungle.isEmpty())
+            return nonJungle;
+        if (nonJungle.isEmpty())
+            return nonJungle;
         if (Simulation.getTruePercentOfTheTime(chanceToGenerateInJungle)){
-            return preferred;}
-        return notPreferred;
+            return jungle;}
+        return nonJungle;
     }
 
     @Override

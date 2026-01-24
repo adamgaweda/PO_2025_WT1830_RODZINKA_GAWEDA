@@ -50,10 +50,6 @@ public abstract class AbstractWorldMap implements WorldMap {
 
     @Override
     public void place(Animal animal) throws IncorrectPositionException{
-        /*Vector2d vector2d = animal.getPosition();
-        if (!animals.containsKey(vector2d))
-            animals.put(vector2d, new HashSet<>());
-        animals.get(vector2d).add(animal);*/
         animals.put(animal.getPosition(), animal);
         notifyMapChanged("Animal placed at: " + animal.getPosition(), animal.getPosition());
     }
@@ -122,15 +118,9 @@ public abstract class AbstractWorldMap implements WorldMap {
 
     @Override
     public List<Animal> getOrderedAnimals(){
-//        Comparator<Animal> animalComparator = Comparator
-//                .comparing(Animal::getPosition,
-//                        Vector2d::comparteTo);
-//        Arrays.sort(new List[]{List.of(animals)});
-//        return List.of(); doesnt work
         return animals.values().stream()
                 .sorted(Comparator.comparing((Animal animal) -> animal.getPosition().getX())
                         .thenComparing(animal -> animal.getPosition().getY())).toList()
                 ;
-        // this works
     }
 }

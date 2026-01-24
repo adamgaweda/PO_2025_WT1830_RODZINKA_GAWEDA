@@ -99,9 +99,6 @@ public class SimulationPresenter implements MapChangeListener {
     private final int defaultMapValue = 8;
     private final int defaultEnergyValue = 1;
 
-    private final int CELL_HIGHT=33;
-    private final int CELL_WIDTH=33;
-
     public void setMap(GrassField worldMap) {
         this.worldMap=worldMap;
     }
@@ -171,28 +168,6 @@ public class SimulationPresenter implements MapChangeListener {
                 margin/2,
                 margin/2
         );
-
-//        for (int i = 0; i<width +1; i++){
-//            for (int j = height; j > -1; j--){
-//                Vector2d position = new Vector2d(i + bottomLeftEdgeOfTheMap.getX(), topRightEdgeOfTheMap.getY()-j);
-//
-//                if (worldMap.isOccupied(position)){
-//                    Optional<WorldElement> optElement = worldMap.objectAt(position);
-//                    final int col = i+1;
-//                    final int row = j+1;
-//
-//                    optElement.ifPresent(element -> {
-//                        WorldElementBox box = new WorldElementBox(element);
-//
-//                    });
-//                }
-//            }
-//        }
-//        mapGrid.getColumnConstraints().add(new ColumnConstraints(CELL_HIGHT));
-//        mapGrid.getRowConstraints().add(new RowConstraints(CELL_WIDTH));
-//        Label label = new Label("y\\x");
-//        mapGrid.add(label, 0, 0);
-//        GridPane.setHalignment(label, HPos.CENTER);
     }
 
     @FXML
@@ -258,12 +233,6 @@ public class SimulationPresenter implements MapChangeListener {
         clock.stop();
     }
 
-    private void clearGrid() {
-//        mapGrid.getChildren().retainAll(mapGrid.getChildren().getFirst());
-//        mapGrid.getColumnConstraints().clear();
-//        mapGrid.getRowConstraints().clear();
-    }
-
     @Override
     public void mapChanged(WorldMap worldMap, String message, Vector2d vector2d) {
         Platform.runLater(() -> {
@@ -312,25 +281,5 @@ public class SimulationPresenter implements MapChangeListener {
             }
         }
     }
-
-//    private boolean isRunning(){
-//        return executorService != null && !executorService.isShutdown();
-//    }
-//
-//    public void start(Thread thread){
-//        if (isRunning()) throw new RuntimeException("Simulation is already running");
-//        executorService = Executors.newSingleThreadScheduledExecutor();
-//        executorService.scheduleWithFixedDelay(thread,500/speedOfSimulation,
-//                1000/speedOfSimulation, TimeUnit.MILLISECONDS);
-//    }
-//
-//    public void setSpeedOfSimulation(int speed,Thread thread){
-//        this.speedOfSimulation = speed;
-//        if (isRunning()) {
-//            executorService.shutdown();
-//            thread.start();
-//        }
-//    }
-
 
 }

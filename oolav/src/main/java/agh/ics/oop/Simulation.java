@@ -16,13 +16,9 @@ public class Simulation implements  Runnable {
     List<Animal> allAnimals = new ArrayList<>();
     GrassField worldMap;
     private final int numberOfGrassEachDayValue;
-    int i =0;
     private int day = 0;
     private final List<MapChangeListener> listeners = new ArrayList<>();
     private final int energyPerGrassEatenValue;
-    private long FRAMES_PER_SECOND=50L;
-    private long INTERVAL=10000000L / FRAMES_PER_SECOND;
-    private long last = 0;
     private final GrassGenerator grassGenerator;
     private final int energyRequiredToChargeValue;
     private final int energyIntervalToChargeValue;

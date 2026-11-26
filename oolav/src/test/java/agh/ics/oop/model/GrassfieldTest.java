@@ -46,7 +46,7 @@ class GrassfieldTest {
         GrassGenerator generator = new GrassGenerator(map, map.getHeight()/2,map.getWidth(), 80 );
         Grass grass = generator.generateGrass();
         Vector2d vector2d = grass.getPosition();
-        Animal animal = new Animal(grass.getPosition(),4,4,4,4);
+        Animal animal = new Animal(new Vector2d(4, 4),4,4,4,4);
         animal.setPos(vector2d);
         map.place(grass);
         map.place(animal);

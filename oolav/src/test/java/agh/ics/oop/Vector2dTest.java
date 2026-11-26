@@ -30,7 +30,8 @@ class Vector2dTest {
         Vector2d v1 = new Vector2d(0,0);
         Vector2d v2 = new Vector2d(1,0);
         //then
-        assertTrue(v2.precedes(v1));
+        assertTrue(v1.precedes(v2));
+        assertFalse(v2.precedes(v1));
     }
 
     @Test
@@ -39,7 +40,8 @@ class Vector2dTest {
         Vector2d v1 = new Vector2d(0,0);
         Vector2d v2 = new Vector2d(1,0);
         // then
-        assertTrue(v1.follows(v2));
+        assertTrue(v2.follows(v1));
+        assertFalse(v1.follows(v2));
     }
 
     @Test

@@ -17,10 +17,12 @@ Animals roam a 2D grid map with a central jungle zone, graze on grass to gain en
 - **Real-Time JavaFX Visualization**: Canvas-based map rendering with pause/resume controls and configurable FPS.
 - **Live Statistics**: Tracks animal count, grass count, free map slots, average lifespan, average number of children, average energy, and the dominant genome.
 
-## Team & Roles
+## Authors
 
-- **Krzysztof Rodzinka** (`krzysiuro`) — Core simulation loop (`Simulation`), world map & grass generation (`GrassField`, `GrassGenerator`), animal genetics & statistics, pause/resume mechanics.
-- **Adam Gawęda** (`adamgaweda`) — JavaFX GUI & Canvas rendering (`SimulationApp`, `SimulationPresenter`, FXML views), animal reproduction, and UI/map integration.
+- **Krzysztof Rodzinka** (`krzysiuro`)
+- **Adam Gawęda** (`adamgaweda`)
+
+Built collaboratively as a two-person team project.
 
 ## How to Run
 
